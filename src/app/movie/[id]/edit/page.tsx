@@ -1,4 +1,4 @@
-import MovieByIdPage from "@/app/pages/MovieByIdPage";
+import EditMovieByIdPage from "@/app/pages/EditMovieByIdPage";
 
 interface Props {
   params: { id: string };
@@ -6,7 +6,7 @@ interface Props {
 }
 
 const MovieById = ({ params }: Props) => {
-  return <MovieByIdPage params={params} />;
+  return <EditMovieByIdPage params={params} />;
 };
 
 export default MovieById;

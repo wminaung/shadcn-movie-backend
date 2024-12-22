@@ -87,7 +87,7 @@ const MyImageCard = ({ customClassName, isViewAll, movie, asImage }: Props) => {
         ratio={2 / 3}
         width={10}
         components={
-          <Link href={`/movie/${movie.id}`}>
+          <Link href={`/movie/${movie.id}/edit`}>
             <Image
               fill
               src={

@@ -9,9 +9,9 @@ interface Props {
 }
 export default function AllMoviePage({ searchParams }: Props) {
   const { movies, loading, error } = useFetchMovies(
-    `${nextPublicApiUrl}/admin/movie?title=${
-      searchParams.title || ""
-    }&category=${searchParams.category || ""}`
+    `${nextPublicApiUrl}/movie?title=${searchParams.title || ""}&category=${
+      searchParams.category || ""
+    }`
   );
 
   if (error) return <div className="text-3xl text-red-700">Error</div>;

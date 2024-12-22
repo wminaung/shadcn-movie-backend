@@ -1,4 +1,4 @@
-export type Movie = {
+export type Dear = {
   id: number;
   title: string;
   category: string;
@@ -9,7 +9,7 @@ export type Movie = {
 
   runtime: number; // in minutes
 };
-export const movies: Movie[] = [
+export const movies: Dear[] = [
   {
     id: 1,
     title: "Inception",

@@ -17,12 +17,10 @@ export async function GET(request: NextRequest, { params }: ParamsProps) {
     );
   }
 
-  const searchMovie = await cacheFetch<Movie>(`movie:${id}`, async () => {
-    return await prisma.movie.findUnique({
-      where: {
-        id: id,
-      },
-    });
+  const searchMovie = await prisma.movie.findUnique({
+    where: {
+      id: id,
+    },
   });
 
   if (!searchMovie) {
