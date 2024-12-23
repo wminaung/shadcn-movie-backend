@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
+import { Session } from "next-auth";
 import { twMerge } from "tailwind-merge";
+import { getSession } from "./auth";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -19,4 +21,14 @@ export const convertMinutesToHoursAndSeconds = (totalMinutes: number) => {
   const seconds = minutes * 60;
 
   return { hours, minutes, seconds };
+};
+
+export const authCheck = async () => {
+  const session = await getSession();
+
+  if (!session || !session.user || !session.user.email) {
+    // do something
+    return new Promise((resolve) => resolve(false));
+  }
+  return new Promise((resolve) => resolve(true));
 };

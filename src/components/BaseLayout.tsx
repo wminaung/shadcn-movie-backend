@@ -14,7 +14,7 @@ const BaseLayout = ({ children }: Props) => {
   }, []);
 
   if (!mounted) {
-    return <>{children}</>; // Render without theme provider initially (avoids mismatch)
+    return <>{children} </>; // Render without theme provider initially (avoids mismatch)
   }
   return (
     <ThemeProvider attribute="class" defaultTheme="dark">

@@ -5,10 +5,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Movie } from "@prisma/client";
 import useCreateMovie, { MoviePayload } from "@/hooks/use-create-movie";
 import { nextPublicApiUrl } from "@/constants/constants";
-import Link from "next/link";
+import Loading from "@/components/Loading";
 
 const CreateMoviePage: React.FC = () => {
   const {
@@ -44,12 +43,7 @@ const CreateMoviePage: React.FC = () => {
       </div>
     );
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+  if (loading) return <Loading />;
 
   return (
     <div className="max-w-lg mx-auto p-4">

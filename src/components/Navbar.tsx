@@ -12,6 +12,7 @@ import {
 } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import ProfileTag from "./ProfileTag";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,24 +51,8 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div className="text-2xl font-bold">MyLogo</div>
-        {/* Search Box */}
-        {/* <div className="hidden md:flex items-center">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            onKeyDown={handleKeyDown}
-            placeholder="Search..."
-            className="px-3 py-1 rounded text-black  dark:text-white "
-          />
-          <button
-            onClick={handleSearchMovie}
-            className="ml-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded"
-          >
-            Search
-          </button>
-        </div> */}
-        <div className="hidden md:flex items-center">
+
+        <div className="hidden  md:flex items-center">
           <div className="relative w-full">
             <input
               type="text"
@@ -124,7 +109,7 @@ const Navbar = () => {
           </Button>
         </div>
         {/* Menu for large screens */}
-        <ul className="hidden md:flex space-x-6">
+        <ul className="hidden items-center  md:flex space-x-6">
           <li>
             <Link href="/" className="hover:text-gray-300">
               Home
@@ -159,9 +144,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link href="#" className="hover:text-gray-300">
-              Contact
-            </Link>
+            <ProfileTag />
           </li>
         </ul>
 
@@ -234,9 +217,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-gray-300">
-                Contact
-              </Link>
+              <ProfileTag />
             </li>
           </ul>
         </div>

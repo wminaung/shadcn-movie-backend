@@ -1,10 +1,11 @@
 "use client";
+import Error from "@/components/Error";
+import Loading from "@/components/Loading";
 import MyImageCard from "@/components/MyImageCard";
 import { Button } from "@/components/ui/button";
 import { nextPublicApiUrl } from "@/constants/constants";
 import useFetchMovieById from "@/hooks/use-fetch-movie-by-id";
 import { convertMinutesToHoursAndSeconds } from "@/lib/utils";
-import { Movie } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 
 interface Props {
@@ -23,8 +24,8 @@ const EditMovieByIdPage = ({ params }: Props) => {
     setDisabled,
   } = useFetchMovieById(`${nextPublicApiUrl}/movie/${params.id}`);
 
-  if (error) return <div className="text-3xl text-red-700">Error</div>;
-  if (loading) return <div className="text-3xl text-teal-600 ">Loading...</div>;
+  if (error) return <Error message={error} />;
+  if (loading) return <Loading />;
 
   const id = params.id;
   const duration = convertMinutesToHoursAndSeconds(movie.runtime);
@@ -51,6 +52,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
     const url = `${nextPublicApiUrl}/admin/movie/${params.id}`;
     setDisabled(true);
     await updateMovie(url);
+    alert("Movie updated successfully");
     setDisabled(false);
   };
 

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { nextPublicApiUrl, nextPublicBaseUrl } from "@/constants/constants";
 import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 export default function HomePage() {
   const { movies, loading, error } = useFetchMovies(
@@ -14,7 +15,7 @@ export default function HomePage() {
   );
   const router = useRouter();
 
-  if (error) return <div className="text-3xl text-red-700">Error</div>;
+  if (error) return <Error message={error} />;
   if (loading) return <Loading />;
 
   const categories = movies.map((movie) => movie.category);

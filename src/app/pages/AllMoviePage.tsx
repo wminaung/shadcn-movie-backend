@@ -1,9 +1,11 @@
 "use client";
 
+import Error from "@/components/Error";
 import Loading from "@/components/Loading";
 import MyImageCard from "@/components/MyImageCard";
 import { nextPublicApiUrl } from "@/constants/constants";
 import useFetchMovies from "@/hooks/use-fetch-movies";
+import { useSession } from "next-auth/react";
 interface Props {
   searchParams: { title?: string; category?: string };
 }
@@ -14,7 +16,10 @@ export default function AllMoviePage({ searchParams }: Props) {
     }`
   );
 
-  if (error) return <div className="text-3xl text-red-700">Error</div>;
+  const session = useSession();
+  console.log(session);
+
+  if (error) return <Error message={error} />;
   if (loading) return <Loading />;
   return (
     <div className="mx-auto xs:mx-0 xs:w-full sm:container sm:px-4 md:mx-auto transition-all">

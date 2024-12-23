@@ -2,10 +2,17 @@ import prisma from "@/lib/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 import { MoviePayload } from "@/hooks/use-create-movie";
 import { z } from "zod";
+import { getSession } from "@/lib/auth";
+import { authCheck } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   const title = request.nextUrl.searchParams.get("title");
   const category = request.nextUrl.searchParams.get("category");
+
+  // authcheck
+  if (!(await authCheck())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   if (category) {
     const searchMoviesByCategory = await prisma.movie.findMany({
