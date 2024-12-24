@@ -22,7 +22,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
     updateMovie,
     disabled,
     setDisabled,
-  } = useFetchMovieById(`${nextPublicApiUrl}/movie/${params.id}`);
+  } = useFetchMovieById({ id: params.id });
 
   if (error) return <Error message={error} />;
   if (loading) return <Loading />;
@@ -49,9 +49,9 @@ const EditMovieByIdPage = ({ params }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const url = `${nextPublicApiUrl}/admin/movie/${params.id}`;
+
     setDisabled(true);
-    await updateMovie(url);
+    await updateMovie(params.id);
     alert("Movie updated successfully");
     setDisabled(false);
   };

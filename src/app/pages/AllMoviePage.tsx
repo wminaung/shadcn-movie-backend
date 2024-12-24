@@ -9,12 +9,13 @@ import { useSession } from "next-auth/react";
 interface Props {
   searchParams: { title?: string; category?: string };
 }
-export default function AllMoviePage({ searchParams }: Props) {
-  const { movies, loading, error } = useFetchMovies(
-    `${nextPublicApiUrl}/movie?title=${searchParams.title || ""}&category=${
-      searchParams.category || ""
-    }`
-  );
+export default function AllMoviePage({
+  searchParams: { category, title },
+}: Props) {
+  const { movies, loading, error } = useFetchMovies({
+    category,
+    title,
+  });
 
   const session = useSession();
   console.log(session);

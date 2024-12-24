@@ -1,11 +1,57 @@
 import { nextPublicApiUrl } from "@/constants/constants";
+import { Movie } from "@prisma/client";
 
 // Declare the class first
+
 export class ApiService {
   private apiUrl: string;
 
   constructor(apiUrl: string) {
     this.apiUrl = apiUrl;
+  }
+
+  public async getMovieById({ id }: ApiService.getMovieById) {
+    const url = `/movie/${id}`;
+    return await this.fetchData<Movie>({ url });
+  }
+
+  /**
+   *  const fetchDataParam: ApiService.FetchDataParam = {
+        method: ApiService.HttpMethod.POST,
+        contentType: ApiService.ContentType.JSON,
+        options: {
+          body: JSON.stringify(movie),
+        },
+      };
+   */
+  public async postMovie({ data }: ApiService.PostMovieParam) {
+    const url = `/admin/movie`;
+
+    return await this.fetchData<Movie>({
+      url,
+      method: ApiService.HttpMethod.POST,
+      options: {
+        body: JSON.stringify(data),
+      },
+    });
+  }
+
+  public async putMovieById({ id, data }: ApiService.PutMovieByIdParam) {
+    const url = `/admin/movie/${id}`;
+    return await this.fetchData<Movie>({
+      url,
+      method: ApiService.HttpMethod.PUT,
+      options: {
+        body: JSON.stringify(data),
+      },
+    });
+  }
+
+  public async getMovies(searchParam: ApiService.GetMoviesParam) {
+    const url = `/movie?title=${searchParam.title || ""}&category=${
+      searchParam.category || ""
+    }`;
+    return await this.fetchData<Movie[]>({ url });
   }
 
   public async fetchData<T extends object>({
@@ -36,6 +82,21 @@ export class ApiService {
 
 // Declare the namespace after the class
 export namespace ApiService {
+  export interface GetMoviesParam {
+    title?: string;
+    category?: string;
+  }
+  export interface getMovieById {
+    id: string;
+  }
+  export interface MoviePayload extends Omit<Movie, "id"> {}
+  export interface PostMovieParam {
+    data: MoviePayload;
+  }
+  export interface PutMovieByIdParam {
+    id: string;
+    data: Movie;
+  }
   export enum HttpMethod {
     GET = "GET",
     POST = "POST",

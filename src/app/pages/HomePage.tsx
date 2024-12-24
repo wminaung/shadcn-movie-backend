@@ -10,9 +10,7 @@ import Loading from "@/components/Loading";
 import Error from "@/components/Error";
 
 export default function HomePage() {
-  const { movies, loading, error } = useFetchMovies(
-    `${nextPublicApiUrl}/movie`
-  );
+  const { movies, loading, error } = useFetchMovies({});
   const router = useRouter();
 
   if (error) return <Error message={error} />;
