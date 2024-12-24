@@ -6,9 +6,9 @@ interface ErrorProps {
 
 const Error: React.FC<ErrorProps> = ({ message }) => {
   return (
-    <div className="flex items-center justify-center p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-md shadow-md">
+    <div className="flex items-center justify-center p-4 bg-red-100 border border-red-400 text-red-700 rounded-md shadow-md">
       <svg
-        className="w-6 h-6 mr-2 text-yellow-700"
+        className="w-6 h-6 mr-2 text-red-700"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -18,7 +18,7 @@ const Error: React.FC<ErrorProps> = ({ message }) => {
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="2"
-          d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"
+          d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
         ></path>
       </svg>
       <div>

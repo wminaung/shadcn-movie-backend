@@ -1,14 +1,9 @@
 import prisma from "@/lib/prisma";
-import { cacheFetch } from "@/lib/redis";
 import { ParamsProps } from "@/types/base";
 import { NextResponse, type NextRequest } from "next/server";
-import { Movie } from "@prisma/client";
 
 export async function GET(request: NextRequest, { params }: ParamsProps) {
-  const id = params.id;
-  // const searchMovie = movies.filter(
-  //   (movie) => String(movie.id) === params.id
-  // )[0];
+  const id = params["id"];
 
   if (!id) {
     return NextResponse.json(
@@ -30,5 +25,5 @@ export async function GET(request: NextRequest, { params }: ParamsProps) {
     );
   }
 
-  return NextResponse.json(searchMovie);
+  return NextResponse.json(searchMovie, { status: 200 });
 }

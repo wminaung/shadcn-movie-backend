@@ -1,12 +1,12 @@
 import prisma from "@/lib/prisma";
-import { cacheFetch } from "@/lib/redis";
-import { ParamsProps } from "@/types/base";
 import { NextResponse, type NextRequest } from "next/server";
 import { Movie } from "@prisma/client";
+import { ParamsProps, QueryProps } from "@/types/base";
 
 // Edit Movie
+
 export async function PUT(request: NextRequest, { params }: ParamsProps) {
-  const id = params.id;
+  const id = params["id"];
   const newMovie = (await request.json()) as Movie;
   console.log(newMovie);
   if (!id) {
@@ -41,5 +41,5 @@ export async function PUT(request: NextRequest, { params }: ParamsProps) {
     },
   });
 
-  return NextResponse.json(updatedMovie ? updatedMovie : null);
+  return NextResponse.json(updatedMovie ? updatedMovie : null, { status: 200 });
 }

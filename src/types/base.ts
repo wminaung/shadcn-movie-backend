@@ -1,3 +1,6 @@
 export interface ParamsProps {
-  params: { id: string };
+  params: { [key: string]: string };
+}
+export interface QueryProps {
+  query: { [key: string]: string };
 }

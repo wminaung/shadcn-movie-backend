@@ -58,5 +58,5 @@ export async function GET(request: NextRequest) {
     return movies;
   });
 
-  return NextResponse.json(movies);
+  return NextResponse.json(movies, { status: 200 });
 }

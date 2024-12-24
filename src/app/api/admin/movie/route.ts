@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
   const movies = await prisma.movie.findMany();
 
-  return NextResponse.json(movies);
+  return NextResponse.json(movies, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {

@@ -20,8 +20,8 @@ const CreateMoviePage: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<MoviePayload> = async (data) => {
-    const url = `${nextPublicApiUrl}/admin/movie`;
-    await createMovie(data, url);
+    const url = `/admin/movie`;
+    await createMovie({ movie: data, url });
     reset(); // Clear the input fields after submission
     setAlertMessage(`You created a new movie: ${data.title}`);
     setTimeout(() => setAlertMessage(null), 5000); // Hide alert after 5 seconds

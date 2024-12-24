@@ -11,7 +11,7 @@ const authOptions: AuthOptions = {
     // ...add more providers here
   ],
 
-  secret: "mysecret",
+  secret: "my_secret",
 };
 
 /**
