@@ -71,7 +71,7 @@ const MyImageCard = ({ customClassName, isViewAll, movie, asImage }: Props) => {
               fill
               src={"/2.avif"}
               alt="movie"
-              className="object-cover  rounded-lg  transition-all"
+              className="object-cover  rounded-lg  transition-all w-full sm:w-[200px] md:w-[300px] lg:w-[400px]"
             />
           }
         />

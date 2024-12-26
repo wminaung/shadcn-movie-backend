@@ -1,5 +1,6 @@
 import apiService, { ApiService } from "@/lib/apiService";
 import { Movie } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface Param {
@@ -11,6 +12,7 @@ const useFetchMovieById = ({ id }: Param) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [disabled, setDisabled] = useState<boolean>(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMovieById = async () => {
@@ -20,7 +22,10 @@ const useFetchMovieById = ({ id }: Param) => {
         setMovie(data);
         setNewMovie(data);
       } catch (error: unknown) {
-        if (error instanceof Error) setError(error?.message);
+        if (error instanceof Error) {
+          setError(error?.message);
+          router.push("/movie");
+        }
       } finally {
         setLoading(false);
       }
@@ -53,6 +58,10 @@ const useFetchMovieById = ({ id }: Param) => {
     setNewMovie({ ...data });
     return true;
   };
+  const deleteMovie = async (id: string): Promise<boolean> => {
+    const deletedMovie = await apiService.deleteMovieById({ id });
+    return deletedMovie && true;
+  };
 
   return {
     movie,
@@ -60,6 +69,7 @@ const useFetchMovieById = ({ id }: Param) => {
     error,
     newMovie,
     setNewMovie,
+    deleteMovie,
     updateMovie,
     setDisabled,
     disabled,

@@ -26,7 +26,7 @@ const MyMoviesCarousel = ({ category, allMovies }: Props) => {
         // align: "start",
         slidesToScroll: "auto",
       }}
-      className="w-full"
+      className="md:w-[98%] w-full "
     >
       <CarouselContent>
         {movies.map((movie, index) => (

@@ -15,15 +15,6 @@ export class ApiService {
     return await this.fetchData<Movie>({ url });
   }
 
-  /**
-   *  const fetchDataParam: ApiService.FetchDataParam = {
-        method: ApiService.HttpMethod.POST,
-        contentType: ApiService.ContentType.JSON,
-        options: {
-          body: JSON.stringify(movie),
-        },
-      };
-   */
   public async postMovie({ data }: ApiService.PostMovieParam) {
     const url = `/admin/movie`;
 
@@ -33,6 +24,14 @@ export class ApiService {
       options: {
         body: JSON.stringify(data),
       },
+    });
+  }
+
+  public async deleteMovieById({ id }: ApiService.DeleteMovieByIdParam) {
+    const url = `/admin/movie/${id}`;
+    return await this.fetchData<Movie>({
+      url,
+      method: ApiService.HttpMethod.DELETE,
     });
   }
 
@@ -89,6 +88,10 @@ export namespace ApiService {
   export interface getMovieById {
     id: string;
   }
+  export interface DeleteMovieByIdParam {
+    id: string;
+  }
+
   export interface MoviePayload extends Omit<Movie, "id"> {}
   export interface PostMovieParam {
     data: MoviePayload;

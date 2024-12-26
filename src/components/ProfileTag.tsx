@@ -22,7 +22,7 @@ const ProfileTag = () => {
   }, [status, session]);
 
   return (
-    <div className="flex items-center space-x-4">
+    <div className="flex items-center space-x-4 ">
       {status === "authenticated" ? (
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
           <DropdownMenuTrigger asChild>

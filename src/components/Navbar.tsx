@@ -1,8 +1,7 @@
 "use client";
 
-import { nextPublicBaseUrl } from "@/constants/constants";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ChangeEvent,
   KeyboardEvent,
@@ -13,13 +12,15 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import ProfileTag from "./ProfileTag";
+import NavLink from "./NavLink";
+import { MyButton } from "@/app/shadcn/MyButton";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const navigation = useRouter();
-
+  const currentPath = usePathname();
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -45,10 +46,13 @@ const Navbar = () => {
       if (callback && typeof callback === "function") callback();
     }
   };
+  const handleClickCreateBtn = () => {
+    navigation.push(`/movie/create`);
+  };
 
   return (
     <nav className="bg-gray-800 text-white fixed w-full top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center p-4">
+      <div className=" mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div className="text-2xl font-bold">MyLogo</div>
 
@@ -109,39 +113,63 @@ const Navbar = () => {
           </Button>
         </div>
         {/* Menu for large screens */}
-        <ul className="hidden items-center  md:flex space-x-6">
+        <ul className="hidden items-center  md:flex space-x-4 lg:space-x-8">
           <li>
-            <Link href="/" className="hover:text-gray-300">
-              Home
-            </Link>
+            <NavLink to="/" children="Home" currentPath={currentPath} />
           </li>
           <li>
-            <Link href="/movie" className="hover:text-gray-300">
-              All
-            </Link>
+            <NavLink to="/movie" children="All" currentPath={currentPath} />
           </li>
           <li>
-            <Link
-              href="/movie/create"
-              className=" hover:text-blue-500 active:text-blue-200 text-blue-700 flex items-center space-x-2 "
+            <MyButton
+              variant={"ghost"}
+              className="bg-slate-700 hover:bg-slate-500 active:bg-slate-700 rounded-full"
+              size={"sm"}
+              onClick={handleClickCreateBtn}
             >
-              <svg
-                className="w-4 h-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              <span>Create New Movie</span>
-            </Link>
+              <>
+                <svg
+                  className="w-4 h-4"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                <p>Create</p>
+              </>
+            </MyButton>
+            {/* <Link
+              href="/movie/create"
+              className=" hover:text-blue-500 active:text-blue-200 text-blue-700 flex items-center space-x-2
+               hover:bg-slate-800 border border-red-500 rounded-full p-1"
+            >
+              <>
+                <svg
+                  className="w-4 h-4"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                <span>Create</span>
+              </>
+            </Link> */}
           </li>
           <li>
             <ProfileTag />

@@ -5,46 +5,50 @@ import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { authCheck } from "@/lib/utils";
 
-export async function GET(request: NextRequest) {
-  const title = request.nextUrl.searchParams.get("title");
-  const category = request.nextUrl.searchParams.get("category");
+// export async function GET(request: NextRequest) {
+//   const title = request.nextUrl.searchParams.get("title");
+//   const category = request.nextUrl.searchParams.get("category");
 
-  // authcheck
+//   // authcheck
+//   if (!(await authCheck())) {
+//     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//   }
+
+//   if (category) {
+//     const searchMoviesByCategory = await prisma.movie.findMany({
+//       where: {
+//         category: {
+//           contains: category,
+//           mode: "insensitive",
+//         },
+//       },
+//     });
+//     return NextResponse.json(searchMoviesByCategory);
+//   }
+
+//   if (title) {
+//     const searchMoviesByTitle = await prisma.movie.findMany({
+//       where: {
+//         title: {
+//           contains: title,
+//           mode: "insensitive",
+//         },
+//       },
+//     });
+
+//     return NextResponse.json(searchMoviesByTitle);
+//   }
+
+//   const movies = await prisma.movie.findMany();
+
+//   return NextResponse.json(movies, { status: 200 });
+// }
+
+export async function POST(request: NextRequest) {
   if (!(await authCheck())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (category) {
-    const searchMoviesByCategory = await prisma.movie.findMany({
-      where: {
-        category: {
-          contains: category,
-          mode: "insensitive",
-        },
-      },
-    });
-    return NextResponse.json(searchMoviesByCategory);
-  }
-
-  if (title) {
-    const searchMoviesByTitle = await prisma.movie.findMany({
-      where: {
-        title: {
-          contains: title,
-          mode: "insensitive",
-        },
-      },
-    });
-
-    return NextResponse.json(searchMoviesByTitle);
-  }
-
-  const movies = await prisma.movie.findMany();
-
-  return NextResponse.json(movies, { status: 200 });
-}
-
-export async function POST(request: NextRequest) {
   const {
     title,
     category,

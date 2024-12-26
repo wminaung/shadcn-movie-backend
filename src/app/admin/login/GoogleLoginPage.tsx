@@ -42,6 +42,9 @@ const GoogleLoginPage = () => {
             <p className="text-gray-500">
               Please login to access the admin panel.
             </p>
+            <p className="text-xs text-gray-400 mt-2">
+              Your login data is not stored in our database.
+            </p>
           </div>
         )}
       </div>

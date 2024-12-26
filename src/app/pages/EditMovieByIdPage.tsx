@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { nextPublicApiUrl } from "@/constants/constants";
 import useFetchMovieById from "@/hooks/use-fetch-movie-by-id";
 import { convertMinutesToHoursAndSeconds } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 interface Props {
@@ -22,7 +23,9 @@ const EditMovieByIdPage = ({ params }: Props) => {
     updateMovie,
     disabled,
     setDisabled,
+    deleteMovie,
   } = useFetchMovieById({ id: params.id });
+  const router = useRouter();
 
   if (error) return <Error message={error} />;
   if (loading) return <Loading />;
@@ -57,11 +60,15 @@ const EditMovieByIdPage = ({ params }: Props) => {
   };
 
   return (
-    <div className="flex flex-col  sm:flex-row items-center sm:items-start ">
-      <div className="w-[400px] py-8 px-12 rounded-md">
-        <MyImageCard asImage movie={movie} customClassName="rounded-lg" />
-      </div>
-      <div className="py-8 flex flex-col px-3 w-dvw md:w-[400px] lg:w-[500px] rounded-md">
+    <div className="flex flex-col  sm:flex-row items-center sm:items-start p-0 m-0">
+      <div className=" mx-2 rounded-md">
+        <MyImageCard
+          asImage
+          movie={movie}
+          customClassName="rounded-lg w-[180px] sm:w-[300px]"
+        />
+      </div>{" "}
+      <div className="py-8 flex container sm:contain-none w-full flex-col px-3  md:w-[400px] lg:w-[500px] rounded-md">
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div>
             <label htmlFor="Title">Title </label>
@@ -140,14 +147,32 @@ const EditMovieByIdPage = ({ params }: Props) => {
               className="mb-2 p-2 border rounded w-full"
             />
           </div>
-          <Button
-            type="submit"
-            variant={"default"}
-            disabled={disabled}
-            className="active:scale-95"
-          >
-            Save Changes
-          </Button>
+          <div className="flex justify-between">
+            <Button
+              type="submit"
+              variant={"default"}
+              disabled={disabled}
+              className="active:scale-95"
+            >
+              Save Changes
+            </Button>
+            <Button
+              type="button"
+              variant={"destructive"}
+              className="active:scale-95 "
+              onClick={async () => {
+                if (confirm("Are you sure want to delete this movie")) {
+                  const isDeleted = await deleteMovie(params.id);
+                  if (isDeleted) {
+                    alert(`You deleted movie ${params.id}`);
+                    router.push("/");
+                  }
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </div>
         </form>
       </div>
     </div>
