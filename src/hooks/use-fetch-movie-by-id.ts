@@ -1,4 +1,4 @@
-import apiService, { ApiService } from "@/lib/apiService";
+import movieService from "@/lib/movieService";
 import { Movie } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ const useFetchMovieById = ({ id }: Param) => {
   useEffect(() => {
     const fetchMovieById = async () => {
       try {
-        const data = await apiService.getMovieById({ id: id });
+        const data = await movieService.getMovieById({ id: id });
 
         setMovie(data);
         setNewMovie(data);
@@ -48,7 +48,7 @@ const useFetchMovieById = ({ id }: Param) => {
       return false;
     }
 
-    const data = await apiService.putMovieById({
+    const data = await movieService.putMovieById({
       id: id,
       data: newMovie,
     });
@@ -59,7 +59,7 @@ const useFetchMovieById = ({ id }: Param) => {
     return true;
   };
   const deleteMovie = async (id: string): Promise<boolean> => {
-    const deletedMovie = await apiService.deleteMovieById({ id });
+    const deletedMovie = await movieService.deleteMovieById({ id });
     return deletedMovie && true;
   };
 

@@ -1,4 +1,4 @@
-import apiService, { ApiService } from "@/lib/apiService";
+import movieService from "@/lib/movieService";
 import { Movie } from "@prisma/client";
 import { useState } from "react";
 
@@ -15,7 +15,7 @@ const useCreateMovie = () => {
   const createMovie = async ({ movie }: CreateMovieParam) => {
     setLoading(true);
     try {
-      const data = await apiService.postMovie({ data: movie });
+      const data = await movieService.postMovie({ data: movie });
       setData(data);
     } catch (error: unknown) {
       if (error instanceof Error) setError(error?.message);

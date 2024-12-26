@@ -1,15 +1,15 @@
-import apiService, { ApiService } from "@/lib/apiService";
+import movieService, { MovieService } from "@/lib/movieService";
 import { Movie } from "@prisma/client";
 import { useEffect, useState } from "react";
 
-const useFetchMovies = ({ category, title }: ApiService.GetMoviesParam) => {
+const useFetchMovies = ({ category, title }: MovieService.GetMoviesParam) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const data = await apiService.getMovies({ title, category });
+        const data = await movieService.getMovies({ title, category });
 
         setMovies(data);
       } catch (error: unknown) {

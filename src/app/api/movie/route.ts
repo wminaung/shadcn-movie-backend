@@ -1,7 +1,5 @@
 import prisma from "@/lib/prisma";
-import { cacheFetch, redis } from "@/lib/redis";
 import { NextResponse, type NextRequest } from "next/server";
-import { Movie } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   const title = request.nextUrl.searchParams.get("title");
