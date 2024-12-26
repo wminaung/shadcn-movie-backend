@@ -10,7 +10,7 @@ export class ApiService {
     this.apiUrl = apiUrl;
   }
 
-  public async getMovieById({ id }: ApiService.getMovieById) {
+  public async getMovieById({ id }: ApiService.GetMovieByIdParam) {
     const url = `/movie/${id}`;
     return await this.fetchData<Movie>({ url });
   }
@@ -85,7 +85,7 @@ export namespace ApiService {
     title?: string;
     category?: string;
   }
-  export interface getMovieById {
+  export interface GetMovieByIdParam {
     id: string;
   }
   export interface DeleteMovieByIdParam {
