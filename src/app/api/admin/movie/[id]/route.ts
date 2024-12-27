@@ -1,14 +1,33 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { ParamsProps, QueryProps } from "@/types/base";
-
-import { movieController } from "@/core";
+import { authCheck } from "@/lib/utils";
+import { movieService } from "@/core";
+import { Movie } from "@/core/entity/Movie";
 
 // Edit Movie
 
 export async function PUT(request: NextRequest, { params }: ParamsProps) {
-  return movieController.update(request, { params });
+  if (!(await authCheck())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const id = params["id"];
+  const newMovie = (await request.json()) as Movie;
+
+  const updatedMovie = await movieService.update(id, newMovie);
+
+  return NextResponse.json(updatedMovie ? updatedMovie : null, {
+    status: 200,
+  });
 }
 
 export async function DELETE(request: NextRequest, { params }: ParamsProps) {
-  return movieController.delete(request, { params });
+  if (!(await authCheck())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const id = params["id"];
+
+  const deletedMovie = await movieService.delete(id);
+
+  return NextResponse.json(deletedMovie, { status: 200 });
 }

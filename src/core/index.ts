@@ -1,7 +1,7 @@
-import { MovieDatabase } from "@/core/database/MovieDatabase";
-import { MovieController } from "./controller/MovieController";
 import { PrismaClient } from "@prisma/client";
+import { MovieRepository } from "./infrastructure/MovieRepository";
+import { MovieService } from "./service/MoiveService";
 
 const prisma = new PrismaClient();
-export const movieDatabase = new MovieDatabase(prisma);
-export const movieController = new MovieController(movieDatabase);
+const movieRepository = new MovieRepository(prisma);
+export const movieService = new MovieService(movieRepository);

@@ -1,7 +1,18 @@
-import { movieController } from "@/core";
+import { movieService } from "@/core";
 import { ParamsProps } from "@/types/base";
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest, { params }: ParamsProps) {
-  return movieController.get(request, { params });
+  const id = params["id"];
+
+  if (!id) {
+    return NextResponse.json(
+      { message: `Params Error params=${id}` },
+      { status: 404 }
+    );
+  }
+
+  const searchMovie = await movieService.get(id);
+
+  return NextResponse.json(searchMovie, { status: 200 });
 }
