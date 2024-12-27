@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
-import { Movie } from "../entity/Movie";
+import { Movie } from "@/core/entity/Movie";
 import { IMovieRepository, SearchOption } from "./IMovieRepository";
 
 export class MovieRepository implements IMovieRepository {
@@ -16,16 +16,7 @@ export class MovieRepository implements IMovieRepository {
     });
     if (!movie) return null;
 
-    return new Movie(
-      movie.id,
-      movie.title,
-      movie.category,
-      movie.release_year,
-      movie.description,
-      movie.rating,
-      movie.director,
-      movie.runtime
-    );
+    return movie;
   }
 
   private buildSearchQuery(
@@ -52,33 +43,12 @@ export class MovieRepository implements IMovieRepository {
   async getAll(option?: SearchOption): Promise<Movie[]> {
     const query = this.buildSearchQuery(option);
     const movies = await this.prisma.movie.findMany(query);
-    return movies.map(
-      (movie) =>
-        new Movie(
-          movie.id,
-          movie.title,
-          movie.category,
-          movie.release_year,
-          movie.description,
-          movie.rating,
-          movie.director,
-          movie.runtime
-        )
-    );
+    return movies.map((movie) => movie);
   }
 
   async create(data: Omit<Movie, "id">): Promise<Movie> {
     const newMovie = await this.prisma.movie.create({ data: data });
-    return new Movie(
-      newMovie.id,
-      newMovie.title,
-      newMovie.category,
-      newMovie.release_year,
-      newMovie.description,
-      newMovie.rating,
-      newMovie.director,
-      newMovie.runtime
-    );
+    return newMovie;
   }
 
   async update(id: string, data: Partial<Omit<Movie, "id">>): Promise<Movie> {
@@ -89,16 +59,7 @@ export class MovieRepository implements IMovieRepository {
       data,
     });
 
-    return new Movie(
-      updatedMovie.id,
-      updatedMovie.title,
-      updatedMovie.category,
-      updatedMovie.release_year,
-      updatedMovie.description,
-      updatedMovie.rating,
-      updatedMovie.director,
-      updatedMovie.runtime
-    );
+    return updatedMovie;
   }
 
   async delete(id: string): Promise<Movie> {
@@ -106,15 +67,6 @@ export class MovieRepository implements IMovieRepository {
       where: { id },
     });
 
-    return new Movie(
-      deletedMovie.id,
-      deletedMovie.title,
-      deletedMovie.category,
-      deletedMovie.release_year,
-      deletedMovie.description,
-      deletedMovie.rating,
-      deletedMovie.director,
-      deletedMovie.runtime
-    );
+    return deletedMovie;
   }
 }

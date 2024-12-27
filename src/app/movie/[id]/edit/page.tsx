@@ -1,4 +1,4 @@
-import EditMovieByIdPage from "@/app/pages/EditMovieByIdPage";
+import EditMovieByIdPage from "@/components/pages/EditMovieByIdPage";
 
 interface Props {
   params: { id: string };

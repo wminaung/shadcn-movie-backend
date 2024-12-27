@@ -1,16 +1,15 @@
 "use client";
 
 import MyMoviesCarousel from "@/components/MyMoviesCarousel";
-import useFetchMovies from "@/hooks/use-fetch-movies";
-import { MyButton } from "../shadcn/MyButton";
 import { useRouter } from "next/navigation";
 import { FaArrowAltCircleRight } from "react-icons/fa";
-import { nextPublicApiUrl, nextPublicBaseUrl } from "@/constants/constants";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import { useMovieStore } from "@/store/movie";
+import { MyButton } from "@/app/shadcn/MyButton";
 
 export default function HomePage() {
-  const { movies, loading, error } = useFetchMovies({});
+  const { movies, loading, error } = useMovieStore();
   const router = useRouter();
 
   if (error) return <Error message={error} />;
@@ -40,7 +39,7 @@ export default function HomePage() {
           </h3>
 
           <div className="container ">
-            <MyMoviesCarousel allMovies={movies} category={category} />
+            <MyMoviesCarousel category={category} />
           </div>
         </div>
       ))}

@@ -1,9 +1,9 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { Movie } from "../entity/Movie";
+import { Movie } from "@/core/entity/Movie";
 import {
   IMovieRepository,
   SearchOption,
-} from "../infrastructure/IMovieRepository";
+} from "@/core/infrastructure/IMovieRepository";
 import { z } from "zod";
 
 export class MovieService {
@@ -76,16 +76,7 @@ export class MovieService {
   async delete(id: string): Promise<Movie | null> {
     try {
       const deletedMovie = await this.movieRepository.delete(id);
-      return new Movie(
-        deletedMovie.id,
-        deletedMovie.title,
-        deletedMovie.category,
-        deletedMovie.release_year,
-        deletedMovie.description,
-        deletedMovie.rating,
-        deletedMovie.director,
-        deletedMovie.runtime
-      );
+      return deletedMovie;
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&

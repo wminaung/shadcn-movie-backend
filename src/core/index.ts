@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { MovieRepository } from "./infrastructure/MovieRepository";
-import { MovieService } from "./service/MoiveService";
+import { MovieRepository } from "@/core/infrastructure/MovieRepository";
+import { MovieService } from "@/core/service/MovieService";
 
 const prisma = new PrismaClient();
 const movieRepository = new MovieRepository(prisma);

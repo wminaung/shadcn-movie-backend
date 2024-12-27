@@ -2,14 +2,22 @@
 import { ThemeProvider } from "next-themes";
 import Navbar from "./Navbar";
 import { useEffect, useState } from "react";
+import { useMovieStore } from "@/store/movie";
+import { getAllMovies } from "@/store/movie/movieActions";
 
 interface Props {
   children: React.ReactNode;
 }
 const BaseLayout = ({ children }: Props) => {
   const [mounted, setMounted] = useState(false);
+  const { setMovies } = useMovieStore();
 
   useEffect(() => {
+    (async () => {
+      const movies = await getAllMovies();
+      console.log("baselayout", movies);
+      setMovies(movies);
+    })();
     setMounted(true); // Only render the ThemeProvider after mounting
   }, []);
 

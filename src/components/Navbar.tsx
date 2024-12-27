@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  ChangeEvent,
-  KeyboardEvent,
-  MouseEvent,
-  MouseEventHandler,
-  useState,
-} from "react";
-import { Input } from "./ui/input";
+import { ChangeEvent, KeyboardEvent, MouseEvent, useState } from "react";
 import { Button } from "./ui/button";
 import ProfileTag from "./ProfileTag";
 import NavLink from "./NavLink";

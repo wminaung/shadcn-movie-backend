@@ -5,7 +5,7 @@ import Link from "next/link";
 interface Props {
   to: string;
   children: React.ReactNode;
-  currentPath: string;
+  currentPath: string | null;
 }
 
 const NavLink = ({ children, to, currentPath }: Props) => {

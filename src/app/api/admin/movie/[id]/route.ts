@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { ParamsProps, QueryProps } from "@/types/base";
+import { ParamsProps } from "@/types/base";
 import { authCheck } from "@/lib/utils";
 import { movieService } from "@/core";
 import { Movie } from "@/core/entity/Movie";

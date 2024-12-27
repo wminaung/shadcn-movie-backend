@@ -1,11 +1,11 @@
 "use client";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
-import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Movie } from "@prisma/client";
+import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 
 interface Props {
   customClassName?: string;

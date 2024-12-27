@@ -3,49 +3,42 @@ import { Movie } from "@prisma/client";
 
 // Declare the class first
 
-class MovieError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
-
-export class MovieService {
+export class MovieApi {
   private apiUrl: string;
 
   constructor(apiUrl: string) {
     this.apiUrl = apiUrl;
   }
 
-  public async getMovieById({ id }: MovieService.GetMovieByIdParam) {
+  public async getMovieById({ id }: MovieApi.GetMovieByIdParam) {
     const endpoint = this.buildEndpoint(`/movie/${id}`);
     return await this.fetchData<Movie>({ url: endpoint });
   }
 
-  public async postMovie({ data }: MovieService.PostMovieParam) {
+  public async postMovie({ data }: MovieApi.PostMovieParam) {
     const endpoint = this.buildEndpoint(`/admin/movie`);
     return await this.fetchData<Movie>({
       url: endpoint,
-      method: MovieService.HttpMethod.POST,
+      method: MovieApi.HttpMethod.POST,
       options: {
         body: JSON.stringify(data),
       },
     });
   }
 
-  public async deleteMovieById({ id }: MovieService.DeleteMovieByIdParam) {
+  public async deleteMovieById({ id }: MovieApi.DeleteMovieByIdParam) {
     const endpoint = this.buildEndpoint(`/admin/movie/${id}`);
     return await this.fetchData<Movie>({
       url: endpoint,
-      method: MovieService.HttpMethod.DELETE,
+      method: MovieApi.HttpMethod.DELETE,
     });
   }
 
-  public async putMovieById({ id, data }: MovieService.PutMovieByIdParam) {
+  public async putMovieById({ id, data }: MovieApi.PutMovieByIdParam) {
     const endpoint = this.buildEndpoint(`/admin/movie/${id}`);
     return await this.fetchData<Movie>({
       url: endpoint,
-      method: MovieService.HttpMethod.PUT,
+      method: MovieApi.HttpMethod.PUT,
       options: {
         body: JSON.stringify(data),
       },
@@ -61,16 +54,17 @@ export class MovieService {
       .join("&");
   }
 
-  private constructMoviesUrl(searchParam: MovieService.GetMoviesParam): string {
+  private constructMoviesUrl(searchParam: MovieApi.GetMoviesParam): string {
     const queryString = this.createQueryString({
       title: searchParam.title,
       category: searchParam.category,
     });
     return `/movie?${queryString}`;
   }
-  public async getMovies(searchParam: MovieService.GetMoviesParam) {
+  public async getMovies(searchParam: MovieApi.GetMoviesParam) {
     const path = this.constructMoviesUrl(searchParam);
     const endpoint = this.buildEndpoint(path);
+    console.log(endpoint, "endporint");
     return await this.fetchData<Movie[]>({ url: endpoint });
   }
 
@@ -79,8 +73,8 @@ export class MovieService {
   }
 
   private createRequestConfig(
-    method: MovieService.HttpMethod,
-    contentType: MovieService.ContentType,
+    method: MovieApi.HttpMethod,
+    contentType: MovieApi.ContentType,
     options?: RequestInit
   ): RequestInit {
     return {
@@ -95,22 +89,19 @@ export class MovieService {
 
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
-      throw new MovieError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     try {
       return await response.json();
     } catch (error) {
-      throw new MovieError(500, "Invalid JSON response");
+      throw new Error("Invalid JSON response");
     }
   }
 
   private logError(error: unknown): void {
-    if (error instanceof MovieError) {
-      console.error(`API Error (${error.status}):`, error.message);
+    if (error instanceof Error) {
+      console.error(`API Error ():`, error.message);
     } else {
       console.error("Unexpected error:", error);
     }
@@ -118,14 +109,16 @@ export class MovieService {
 
   public async fetchData<T extends object>({
     url,
-    method = MovieService.HttpMethod.GET,
-    contentType = MovieService.ContentType.JSON,
+    method = MovieApi.HttpMethod.GET,
+    contentType = MovieApi.ContentType.JSON,
     options,
-  }: MovieService.FetchDataParam): Promise<T> {
+  }: MovieApi.FetchDataParam): Promise<T> {
     try {
       const config = this.createRequestConfig(method, contentType, options);
+      console.log("config", config, url);
       const response = await fetch(url, config);
-      return await this.handleResponse<T>(response);
+      // return await this.handleResponse<T>(response);
+      return await response.json();
     } catch (error) {
       this.logError(error);
       throw error;
@@ -134,7 +127,7 @@ export class MovieService {
 }
 
 // Declare the namespace after the class
-export namespace MovieService {
+export namespace MovieApi {
   export interface BaseParam {
     id: string;
   }
@@ -175,11 +168,11 @@ export namespace MovieService {
   }
 
   // Export the instance type
-  export type Instance = MovieService;
+  export type Instance = MovieApi;
 }
 
 // Create an instance of the service
-const movieService = new MovieService(nextPublicApiUrl);
+const movieApi = new MovieApi(nextPublicApiUrl);
 
-export default movieService;
-export type MovieServiceInstance = MovieService.Instance;
+export default movieApi;
+export type MovieApiInstance = MovieApi.Instance;

@@ -8,15 +8,16 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import MyImageCard from "./MyImageCard";
-import { Movie } from "@prisma/client";
+import { useMovieStore } from "@/store/movie";
 //sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5
 
 interface Props {
   category: string;
-  allMovies: Movie[];
 }
-const MyMoviesCarousel = ({ category, allMovies }: Props) => {
-  const movies = allMovies.filter((movie) => {
+const MyMoviesCarousel = ({ category }: Props) => {
+  const { movies } = useMovieStore();
+
+  const filteredMovies = movies.filter((movie) => {
     return movie.category.toLowerCase() === category.toLowerCase();
   });
 
@@ -29,7 +30,7 @@ const MyMoviesCarousel = ({ category, allMovies }: Props) => {
       className="md:w-[98%] w-full "
     >
       <CarouselContent>
-        {movies.map((movie, index) => (
+        {filteredMovies.map((movie, index) => (
           <CarouselItem
             key={index}
             className={`basis-2/2 sm:basis-1/3 md:basis-1/4 lg:basis:1/5 xl:basis-1/5`}
@@ -44,7 +45,7 @@ const MyMoviesCarousel = ({ category, allMovies }: Props) => {
         <CarouselItem className="basis-2/2 sm:basis-1/3 md:basis-1/4 lg:basis:1/5 xl:basis-1/5">
           <MyImageCard
             isViewAll={true}
-            movie={movies[0]}
+            movie={filteredMovies[0]}
             customClassName=" w-[150px] sm:w-[160px] md:w-[180px] lg:w-[220px]"
           />
         </CarouselItem>

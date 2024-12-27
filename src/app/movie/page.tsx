@@ -1,4 +1,4 @@
-import AllMoviePage from "../pages/AllMoviePage";
+import AllMoviePage from "@/components/pages/AllMoviePage";
 
 interface Props {
   searchParams: { title?: string; category?: string };

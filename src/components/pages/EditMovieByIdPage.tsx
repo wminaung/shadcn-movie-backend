@@ -3,9 +3,9 @@ import Error from "@/components/Error";
 import Loading from "@/components/Loading";
 import MyImageCard from "@/components/MyImageCard";
 import { Button } from "@/components/ui/button";
-import { nextPublicApiUrl } from "@/constants/constants";
-import useFetchMovieById from "@/hooks/use-fetch-movie-by-id";
-import { convertMinutesToHoursAndSeconds } from "@/lib/utils";
+import { CreateMoviePayload } from "@/core/infrastructure/IMovieRepository";
+import { deleteMovie, updateMovie } from "@/store/movie/movieActions";
+import { useMovieStore } from "@/store/movie";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -14,24 +14,30 @@ interface Props {
 }
 
 const EditMovieByIdPage = ({ params }: Props) => {
-  const {
-    error,
-    loading,
-    movie,
-    newMovie,
-    setNewMovie,
-    updateMovie,
-    disabled,
-    setDisabled,
-    deleteMovie,
-  } = useFetchMovieById({ id: params.id });
+  const [newMovie, setNewMovie] = useState<CreateMoviePayload | null>(null);
+  const [disabled, setDisabled] = useState<boolean>(true);
+
+  const { error, loading, movies, editMovie, removeMovie } = useMovieStore();
   const router = useRouter();
 
-  if (error) return <Error message={error} />;
-  if (loading) return <Loading />;
+  useEffect(() => {
+    (async () => {
+      const movie = movies.find((m) => m.id === params.id);
+      if (!movie) {
+        console.log("There is no movie in state");
+        setNewMovie(null);
+        return;
+      }
+      const { id, ...movieWithoutId } = movie;
+      setNewMovie(movieWithoutId);
+    })();
+  }, []);
 
-  const id = params.id;
-  const duration = convertMinutesToHoursAndSeconds(movie.runtime);
+  if (error) return <Error message={error} />;
+  if (loading || !newMovie) return <Loading />;
+
+  // const id = params.id;
+  // const duration = convertMinutesToHoursAndSeconds(newMovie.runtime);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,9 +58,14 @@ const EditMovieByIdPage = ({ params }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setDisabled(true);
-    await updateMovie(params.id);
+    const updatedMovie = await updateMovie(params.id, newMovie);
+    if (!updatedMovie) {
+      console.log("can not update movie");
+      setDisabled(false);
+      return;
+    }
+    editMovie(updatedMovie);
     alert("Movie updated successfully");
     setDisabled(false);
   };
@@ -64,7 +75,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
       <div className=" mx-2 rounded-md">
         <MyImageCard
           asImage
-          movie={movie}
+          movie={movies.find((m) => m.id === params.id)}
           customClassName="rounded-lg w-[180px] sm:w-[300px]"
         />
       </div>{" "}
@@ -162,8 +173,9 @@ const EditMovieByIdPage = ({ params }: Props) => {
               className="active:scale-95 "
               onClick={async () => {
                 if (confirm("Are you sure want to delete this movie")) {
-                  const isDeleted = await deleteMovie(params.id);
-                  if (isDeleted) {
+                  const deletedMovie = await deleteMovie(params.id);
+                  if (deletedMovie) {
+                    removeMovie(deletedMovie);
                     alert(`You deleted movie ${params.id}`);
                     router.push("/");
                   }
