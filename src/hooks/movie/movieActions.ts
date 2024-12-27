@@ -1,33 +1,24 @@
 "use server";
 
-import { movieDatabase } from "@/core";
+import { movieService } from "@/core";
 import { MovieService } from "@/lib/movieService";
 import { authCheck } from "@/lib/utils";
 import { Movie } from "@prisma/client";
 
-export const getAllMovie = async (params?: MovieService.GetMoviesParam) => {
-  let win = undefined;
-  if (params) {
-    const { category, title } = params;
-    win = title || category || undefined;
-  }
-  return await movieDatabase.getAll({
-    where: {
-      category: {
-        contains: win,
-        mode: "insensitive",
-      },
-    },
+export const getAllMovies = async (params?: MovieService.GetMoviesParam) => {
+  return await movieService.getAll({
+    category: params?.category || undefined,
+    title: params?.title || undefined,
   });
 };
 
 export const getMovie = async (id: string) => {
-  return await movieDatabase.get(id);
+  return await movieService.get(id);
 };
 
 export const createMovie = async (data: Omit<Movie, "id">) => {
   if (!authCheck()) throw new Error("auth required");
-  return await movieDatabase.create(data);
+  return await movieService.create(data);
 };
 
 export const updateMovie = async (
@@ -35,10 +26,10 @@ export const updateMovie = async (
   data: Partial<Omit<Movie, "id">>
 ) => {
   if (!authCheck()) throw new Error("auth required");
-  return await movieDatabase.update(id, data);
+  return await movieService.update(id, data);
 };
 
 export const deleteMovie = async (id: string) => {
   if (!authCheck()) throw new Error("auth required");
-  return await movieDatabase.delete(id);
+  return await movieService.delete(id);
 };

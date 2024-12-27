@@ -10,7 +10,7 @@ interface UseMovieMutationParams {
   movieData?: Movie;
 }
 
-export const useMovieMutation = ({
+export const useMovieMutationExample = ({
   action,
   movieId,
   movieData,

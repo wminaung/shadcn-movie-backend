@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import { Movie } from "@prisma/client";
-import { getAllMovie } from "./movieActions";
+
 import { MovieService } from "@/lib/movieService";
+import { getAllMovies } from "./movieActions";
 
 export const useMovieQuery = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -12,7 +13,7 @@ export const useMovieQuery = () => {
     async (params?: MovieService.GetMoviesParam) => {
       try {
         setLoading(true);
-        const data = await getAllMovie(params);
+        const data = await getAllMovies(params);
         setMovies(data);
       } catch (err) {
         setError("something wrong .....");
