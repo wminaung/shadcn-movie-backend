@@ -1,4 +1,4 @@
-import { MovieDatabase } from "@/database/MovieDatabase";
+import { MovieDatabase } from "@/core/database/MovieDatabase";
 import { MoviePayload } from "@/hooks/use-create-movie";
 import { authCheck } from "@/lib/utils";
 import { ParamsProps } from "@/types/base";

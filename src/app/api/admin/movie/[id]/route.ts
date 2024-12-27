@@ -1,7 +1,7 @@
 import { type NextRequest } from "next/server";
 import { ParamsProps, QueryProps } from "@/types/base";
 
-import { movieController } from "@/controller";
+import { movieController } from "@/core";
 
 // Edit Movie
 
