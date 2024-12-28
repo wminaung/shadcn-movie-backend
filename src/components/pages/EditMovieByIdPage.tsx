@@ -16,22 +16,32 @@ interface Props {
 const EditMovieByIdPage = ({ params }: Props) => {
   const [newMovie, setNewMovie] = useState<CreateMoviePayload | null>(null);
   const [disabled, setDisabled] = useState<boolean>(true);
-
+  const [init, setInit] = useState(false);
   const { error, loading, movies, editMovie, removeMovie } = useMovieStore();
   const router = useRouter();
+  const [oldMovie, setOldMovie] = useState<CreateMoviePayload | null>(null);
 
   useEffect(() => {
-    (async () => {
-      const movie = movies.find((m) => m.id === params.id);
-      if (!movie) {
-        console.log("There is no movie in state");
-        setNewMovie(null);
-        return;
-      }
-      const { id, ...movieWithoutId } = movie;
-      setNewMovie(movieWithoutId);
-    })();
-  }, []);
+    if (!init) {
+      (async () => {
+        const movie = movies.find((m) => m.id === params.id);
+
+        if (!movie) {
+          console.log("There is no movie in state");
+          setOldMovie(null);
+          setNewMovie(null);
+          return;
+        }
+        const { id, ...movieWithoutId } = movie;
+        setNewMovie(movieWithoutId);
+        setOldMovie(movieWithoutId);
+        setInit(true);
+      })();
+    }
+    const newMovieJson = JSON.stringify(newMovie);
+    const oldMovieJson = JSON.stringify(oldMovie);
+    setDisabled(newMovieJson === oldMovieJson);
+  }, [newMovie]);
 
   if (error) return <Error message={error} />;
   if (loading || !newMovie) return <Loading />;
@@ -75,7 +85,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
       <div className=" mx-2 rounded-md">
         <MyImageCard
           asImage
-          movie={movies.find((m) => m.id === params.id)}
+          movieId={params.id}
           customClassName="rounded-lg w-[180px] sm:w-[300px]"
         />
       </div>{" "}

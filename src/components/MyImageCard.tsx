@@ -1,23 +1,36 @@
 "use client";
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Movie } from "@prisma/client";
 import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
+import { useMovieStore } from "@/store/movie";
 
 interface Props {
   customClassName?: string;
   isViewAll?: boolean;
-  movie?: Movie;
+  movieId?: string;
   asImage?: boolean;
 }
 
 //https://images.plex.tv/photo?size=medium-360&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fc%2Fgracenote%2Fc307cf09b20216353316e6f18bf2756d.jpg
 
-const MyImageCard = ({ customClassName, isViewAll, movie, asImage }: Props) => {
-  // ! go all movies
+const MyImageCard = ({
+  customClassName,
+  isViewAll,
+  movieId,
+  asImage,
+}: Props) => {
+  const { movies } = useMovieStore();
+  const [movie, setMovie] = useState<Movie | null>(null);
+
+  useEffect(() => {
+    if (movieId) {
+      setMovie(movies.find((m) => m.id === movieId) || null);
+    }
+  }, [movieId]);
 
   if (!movie) return <div>There is no movie</div>;
 
@@ -87,7 +100,7 @@ const MyImageCard = ({ customClassName, isViewAll, movie, asImage }: Props) => {
         ratio={2 / 3}
         width={10}
         components={
-          <Link href={`/admin/movie/${movie.id}/edit`}>
+          <Link href={`/admin/movie/${movieId}/edit`}>
             <Image
               fill
               src={
