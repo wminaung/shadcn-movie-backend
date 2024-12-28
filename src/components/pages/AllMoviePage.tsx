@@ -25,7 +25,7 @@ export default function AllMoviePage({ searchParams }: Props) {
         {filteredMovies?.map((movie) => (
           <MyImageCard
             key={movie.id}
-            movie={movie}
+            movieId={movie.id}
             customClassName="w-[130px] xs:w-[120px] sm:w-[180px] md:w-[200px] lg:w-[200px]"
           />
         ))}

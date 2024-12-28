@@ -4,9 +4,9 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Movie } from "@prisma/client";
 import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 import { useMovieStore } from "@/store/movie";
+import { Movie } from "@/core/entity/Movie";
 
 interface Props {
   customClassName?: string;

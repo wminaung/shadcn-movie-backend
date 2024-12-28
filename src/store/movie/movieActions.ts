@@ -1,9 +1,9 @@
 "use server";
 
 import { movieService } from "@/core";
+import { Movie } from "@/core/entity/Movie";
 import { SearchOption } from "@/core/infrastructure/IMovieRepository";
 import { authCheck } from "@/lib/utils";
-import { Movie } from "@prisma/client";
 
 export const getAllMovies = async (params?: SearchOption) => {
   return movieService.getAll(params);

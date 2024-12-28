@@ -1,5 +1,7 @@
+/**
+ 
 import { nextPublicApiUrl } from "@/constants/constants";
-import { Movie } from "@prisma/client";
+import { Movie } from "@/core/entity/Movie";
 
 // Declare the class first
 
@@ -176,3 +178,6 @@ const movieApi = new MovieApi(nextPublicApiUrl);
 
 export default movieApi;
 export type MovieApiInstance = MovieApi.Instance;
+
+  
+ **/

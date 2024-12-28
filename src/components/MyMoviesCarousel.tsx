@@ -36,7 +36,7 @@ const MyMoviesCarousel = ({ category }: Props) => {
             className={`basis-2/2 sm:basis-1/3 md:basis-1/4 lg:basis:1/5 xl:basis-1/5`}
           >
             <MyImageCard
-              movie={movie}
+              movieId={movie.id}
               customClassName=" w-[150px] sm:w-[160px] md:w-[180px] lg:w-[220px]"
             />
           </CarouselItem>
@@ -45,7 +45,7 @@ const MyMoviesCarousel = ({ category }: Props) => {
         <CarouselItem className="basis-2/2 sm:basis-1/3 md:basis-1/4 lg:basis:1/5 xl:basis-1/5">
           <MyImageCard
             isViewAll={true}
-            movie={filteredMovies[0]}
+            movieId={filteredMovies[0].id}
             customClassName=" w-[150px] sm:w-[160px] md:w-[180px] lg:w-[220px]"
           />
         </CarouselItem>
