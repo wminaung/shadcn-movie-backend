@@ -15,7 +15,6 @@ const BaseLayout = ({ children }: Props) => {
   useEffect(() => {
     (async () => {
       const movies = await getAllMovies();
-      console.log("baselayout", movies);
       setMovies(movies);
     })();
     setMounted(true); // Only render the ThemeProvider after mounting

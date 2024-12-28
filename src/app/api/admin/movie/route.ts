@@ -1,10 +1,11 @@
 import { movieService } from "@/core";
 import { CreateMoviePayload } from "@/core/infrastructure/IMovieRepository";
-import { authCheck } from "@/lib/utils";
+import { apiAuthCheck } from "@/lib/utils";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
-  if (!(await authCheck())) {
+  const authorized = apiAuthCheck(request);
+  if (!authorized) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const data = (await request.json()) as CreateMoviePayload;

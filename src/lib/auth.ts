@@ -1,23 +1,43 @@
-import { AuthOptions, getServerSession } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
+import { AuthOptions, getServerSession, User } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+
+declare module "next-auth" {
+  interface User {
+    id: string;
+  }
+
+  interface Session {
+    user: User;
+  }
+}
+
 const authOptions: AuthOptions = {
-  // Configure one or more authentication providers
+  session: {
+    strategy: "jwt",
+  },
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID!,
+      clientSecret: process.env.GOOGLE_SECRET!,
     }),
-
-    // ...add more providers here
   ],
-
-  secret: "my_secret",
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
-/**
- * Helper function to get the session on the server without having to import the authOptions object every single time
- * @returns The session object or null
- */
 const getSession = () => getServerSession(authOptions);
 
 export { authOptions, getSession };

@@ -1,7 +1,6 @@
-import React from "react";
+import HomePage from "@/components/pages/HomePage";
+import { getSession } from "next-auth/react";
 
-const page = () => {
-  return <div>page</div>;
-};
-
-export default page;
+export default function Index() {
+  return <HomePage />;
+}

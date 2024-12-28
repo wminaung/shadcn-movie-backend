@@ -25,7 +25,9 @@ const GoogleLoginPage = () => {
               Welcome, {session?.user?.name}!
             </p>
             <Button
-              onClick={() => signOut()}
+              onClick={() =>
+                signOut({ callbackUrl: "/admin/login", redirect: true })
+              }
               className="w-full bg-red-600 text-white hover:bg-red-700"
             >
               Logout
@@ -34,7 +36,9 @@ const GoogleLoginPage = () => {
         ) : (
           <div className="text-center">
             <Button
-              onClick={() => signIn("google")}
+              onClick={() =>
+                signIn("google", { callbackUrl: "/", redirect: true })
+              }
               className="w-full mb-4 bg-blue-600 text-white hover:bg-blue-700"
             >
               Login with Google

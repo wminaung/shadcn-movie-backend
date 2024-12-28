@@ -1,16 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { ParamsProps } from "@/types/base";
-import { authCheck } from "@/lib/utils";
+import { apiAuthCheck } from "@/lib/utils";
 import { movieService } from "@/core";
 import { Movie } from "@/core/entity/Movie";
 
 // Edit Movie
 
 export async function PUT(request: NextRequest, { params }: ParamsProps) {
-  if (!(await authCheck())) {
+  const token = apiAuthCheck(request);
+  if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
   const id = params["id"];
   const newMovie = (await request.json()) as Movie;
 
@@ -22,7 +22,8 @@ export async function PUT(request: NextRequest, { params }: ParamsProps) {
 }
 
 export async function DELETE(request: NextRequest, { params }: ParamsProps) {
-  if (!(await authCheck())) {
+  const authorized = apiAuthCheck(request);
+  if (!authorized) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const id = params["id"];

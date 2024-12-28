@@ -26,7 +26,7 @@ const Navbar = () => {
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
     callback?: () => void
   ) => {
-    navigation.push(`/movie?title=${searchTerm}`);
+    navigation.push(`/admin/movie?title=${searchTerm}`);
     if (callback && typeof callback === "function") callback();
   };
 
@@ -35,12 +35,12 @@ const Navbar = () => {
     callback?: () => void
   ) => {
     if (event.key === "Enter") {
-      navigation.push(`/movie?title=${searchTerm}`);
+      navigation.push(`/admin/movie?title=${searchTerm}`);
       if (callback && typeof callback === "function") callback();
     }
   };
   const handleClickCreateBtn = () => {
-    navigation.push(`/movie/create`);
+    navigation.push(`/admin/movie/create`);
   };
 
   return (
@@ -108,10 +108,14 @@ const Navbar = () => {
         {/* Menu for large screens */}
         <ul className="hidden items-center  md:flex space-x-4 lg:space-x-8">
           <li>
-            <NavLink to="/" children="Home" currentPath={currentPath} />
+            <NavLink to="/admin" children="Home" currentPath={currentPath} />
           </li>
           <li>
-            <NavLink to="/movie" children="All" currentPath={currentPath} />
+            <NavLink
+              to="/admin/movie"
+              children="All"
+              currentPath={currentPath}
+            />
           </li>
           <li>
             <MyButton

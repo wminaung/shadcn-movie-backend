@@ -1,37 +1,232 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Movies API Documentation
 
-## Getting Started
+This is the documentation for the Movies API. The API allows users to perform CRUD operations on movies. Below are the endpoints and how to use them.
 
-First, run the development server:
+## Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Before using this API, ensure you have the following:
+
+- A running instance of the Movies API server.
+- An API client such as Postman or `curl`.
+
+## Base URL
+
+```
+http://localhost:PORT
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Replace `PORT` with the port your server is running on.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Endpoints
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Fetch All Movies
 
-## Learn More
+**GET** `/movie`
 
-To learn more about Next.js, take a look at the following resources:
+Fetches a list of all movies.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Response Example:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```json
+[
+  {
+    "id": "cl123456",
+    "title": "Inception",
+    "category": "Science Fiction",
+    "release_year": 2010,
+    "description": "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea.",
+    "rating": 8.8,
+    "director": "Christopher Nolan",
+    "runtime": 148
+  },
+  {
+    "id": "cl123457",
+    "title": "The Matrix",
+    "category": "Action",
+    "release_year": 1999,
+    "description": "A computer hacker learns the truth about his reality and his role in the war against its controllers.",
+    "rating": 8.7,
+    "director": "The Wachowskis",
+    "runtime": 136
+  }
+]
+```
 
-## Deploy on Vercel
+### Fetch a Movie by ID
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**GET** `/movie/{id}`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# shadcn-movies
+Fetches the details of a single movie by its ID.
+
+#### Path Parameters:
+
+- `id` (string): The unique identifier of the movie.
+
+#### Response Example:
+
+```json
+{
+  "id": "cl123456",
+  "title": "Inception",
+  "category": "Science Fiction",
+  "release_year": 2010,
+  "description": "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea.",
+  "rating": 8.8,
+  "director": "Christopher Nolan",
+  "runtime": 148
+}
+```
+
+## For POST, PUT, and DELETE Requests, Admin Access is Required
+
+### Get Token
+
+1. First, login from the webpage.
+2. After logging in, use the following endpoint to retrieve your admin token:
+
+   **GET** `/api/admin/get-token`
+
+   #### Response Example:
+
+   ```json
+   {
+     "token": "your-token"
+   }
+   ```
+
+## Example
+
+```js
+let token = "your-token";
+
+fetch("/api/admin/movie/{id}", {
+  method: "DELETE",
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
+  .then((res) => res.json())
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((reason) => {
+    console.log(reason);
+  });
+```
+
+### Create a Movie
+
+**POST** `/admin/movie`
+
+Creates a new movie.
+
+#### Request Body:
+
+```json
+{
+  "title": "Interstellar",
+  "category": "Science Fiction",
+  "release_year": 2014,
+  "description": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+  "rating": 8.6,
+  "director": "Christopher Nolan",
+  "runtime": 169
+}
+```
+
+#### Response Example:
+
+```json
+{
+  "id": "cl123458",
+  "title": "Interstellar",
+  "category": "Science Fiction",
+  "release_year": 2014,
+  "description": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+  "rating": 8.6,
+  "director": "Christopher Nolan",
+  "runtime": 169
+}
+```
+
+### Update a Movie by ID
+
+**PUT** `/admin/movie/{id}`
+
+Updates an existing movie by its ID.
+
+#### Path Parameters:
+
+- `id` (string): The unique identifier of the movie.
+
+#### Request Body:
+
+```json
+{
+  "title": "The Dark Knight",
+  "category": "Action",
+  "release_year": 2008,
+  "description": "Batman faces the Joker, a criminal mastermind who seeks to create anarchy in Gotham City.",
+  "rating": 9.0,
+  "director": "Christopher Nolan",
+  "runtime": 152
+}
+```
+
+#### Response Example:
+
+```json
+{
+  "id": "cl123456",
+  "title": "The Dark Knight",
+  "category": "Action",
+  "release_year": 2008,
+  "description": "Batman faces the Joker, a criminal mastermind who seeks to create anarchy in Gotham City.",
+  "rating": 9.0,
+  "director": "Christopher Nolan",
+  "runtime": 152
+}
+```
+
+### Delete a Movie by ID
+
+**DELETE** `/admin/movie/{id}`
+
+Deletes an existing movie by its ID.
+
+#### Path Parameters:
+
+- `id` (string): The unique identifier of the movie.
+
+#### Response Example:
+
+```json
+{
+  "message": "Movie deleted successfully."
+}
+```
+
+## Error Handling
+
+The API uses standard HTTP status codes for indicating errors:
+
+- `400 Bad Request`: The request is invalid or missing required parameters.
+- `404 Not Found`: The specified movie does not exist.
+- `500 Internal Server Error`: A server error occurred.
+
+#### Example Error Response:
+
+```json
+{
+  {
+  "id": "deleted movie id",
+  "title": "deleted",
+  "category": "deleted",
+  "release_year": 2008,
+  "description": "deleted deleted.",
+  "rating": 9.0,
+  "director": "deleted",
+  "runtime": 152
+}
+}
+```

@@ -33,7 +33,7 @@ const MyImageCard = ({ customClassName, isViewAll, movie, asImage }: Props) => {
           ratio={2 / 3}
           width={10}
           components={
-            <Link href={`/movie?category=${movie.category}`}>
+            <Link href={`/admin/movie?category=${movie.category}`}>
               <Image
                 fill
                 src={
@@ -87,7 +87,7 @@ const MyImageCard = ({ customClassName, isViewAll, movie, asImage }: Props) => {
         ratio={2 / 3}
         width={10}
         components={
-          <Link href={`/movie/${movie.id}/edit`}>
+          <Link href={`/admin/movie/${movie.id}/edit`}>
             <Image
               fill
               src={

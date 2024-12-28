@@ -7,10 +7,14 @@ import Loading from "@/components/Loading";
 import Error from "@/components/Error";
 import { useMovieStore } from "@/store/movie";
 import { MyButton } from "@/app/shadcn/MyButton";
+import { useSession } from "next-auth/react";
 
 export default function HomePage() {
   const { movies, loading, error } = useMovieStore();
   const router = useRouter();
+  const session = useSession();
+  console.log(JSON.stringify(session));
+  console.log("hello");
 
   if (error) return <Error message={error} />;
   if (loading) return <Loading />;
@@ -29,7 +33,7 @@ export default function HomePage() {
             <MyButton
               variant={"link"}
               onClick={() => {
-                router.push(`/movie?category=${category}`);
+                router.push(`/admin/movie?category=${category}`);
               }}
               className="pl-0 text-xl"
               title={`Go to movies by ${category} category`}

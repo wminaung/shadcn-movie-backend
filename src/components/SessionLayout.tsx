@@ -12,11 +12,11 @@ interface Props {
 const SessionLayout = ({ children, session }: Props) => {
   const router = useRouter();
 
-  useEffect(() => {
-    if (!session || !session.user || !session.user.email) {
-      router.push("/admin/login");
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (!session || !session.user || !session.user.email) {
+  //     router.push("/admin/login");
+  //   }
+  // }, [session]);
 
   return <SessionProvider session={session}>{children}</SessionProvider>;
 };

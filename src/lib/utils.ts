@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { getSession } from "./auth";
+import { NextRequest } from "next/server";
+import { getToken, JWT } from "next-auth/jwt";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -30,4 +32,20 @@ export const authCheck = async () => {
     return new Promise((resolve) => resolve(false));
   }
   return new Promise((resolve) => resolve(true));
+};
+
+export const apiAuthCheck = async (
+  request: NextRequest
+): Promise<JWT | null> => {
+  try {
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    return token;
+  } catch (error) {
+    console.log("apiAuthCheck Error", error);
+    return null;
+  }
 };
