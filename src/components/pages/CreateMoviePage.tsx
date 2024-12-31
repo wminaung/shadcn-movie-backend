@@ -9,16 +9,20 @@ import Loading from "@/components/Loading";
 import { useMovieStore } from "@/store/movie";
 import { Movie } from "@/core/entity/Movie";
 import { createMovie } from "@/store/movie/movieActions";
-import { CreateMoviePayload } from "@/core/infrastructure/IMovieRepository";
+import { CreateMoviePayload } from "@/core/infrastructure/movie/IMovieRepository";
+import { MultiSelect } from "../multi-select";
+import { useCategoryStore } from "@/store/category/categoryStore";
 
 const CreateMoviePage: React.FC = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
-  } = useForm<Movie>();
+  } = useForm<CreateMoviePayload>();
   const { addMovie, error, loading } = useMovieStore();
+  const { categories } = useCategoryStore();
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<CreateMoviePayload> = async (data) => {
@@ -84,6 +88,7 @@ const CreateMoviePage: React.FC = () => {
           <Input
             id="title"
             type="text"
+            defaultValue={"win"}
             {...register("title", { required: "Title is required" })}
             className="mt-1"
           />
@@ -98,7 +103,23 @@ const CreateMoviePage: React.FC = () => {
           >
             Category
           </label>
-          <Input
+          <div className="">
+            <MultiSelect
+              options={categories.map((cat) => ({
+                value: cat.id,
+                label: cat.name,
+              }))}
+              onValueChange={(value) => {
+                setValue("categoryIds", value);
+                // setNewMovie({ ...newMovie, categoryIds: value });
+              }}
+              placeholder="Select category"
+              variant="inverted"
+              animation={2}
+              maxCount={3}
+            />
+          </div>
+          {/* <Input
             id="category"
             type="text"
             {...register("category", { required: "Category is required" })}
@@ -106,7 +127,7 @@ const CreateMoviePage: React.FC = () => {
           />
           {errors.category && (
             <p className="text-red-500 text-sm">{errors.category.message}</p>
-          )}
+          )} */}
         </div>
         <div>
           <label
@@ -117,6 +138,7 @@ const CreateMoviePage: React.FC = () => {
           </label>
           <Input
             id="release_year"
+            defaultValue={2021}
             type="number"
             {...register("release_year", {
               required: "Release year is required",
@@ -138,6 +160,7 @@ const CreateMoviePage: React.FC = () => {
             Description
           </label>
           <Textarea
+            defaultValue={"win desc"}
             id="description"
             {...register("description", {
               required: "Description is required",
@@ -158,6 +181,7 @@ const CreateMoviePage: React.FC = () => {
           <Input
             id="rating"
             type="number"
+            defaultValue={5}
             step="0.1"
             {...register("rating", {
               required: "Rating is required",
@@ -181,6 +205,7 @@ const CreateMoviePage: React.FC = () => {
           <Input
             id="director"
             type="text"
+            defaultValue={"win director"}
             {...register("director", { required: "Director is required" })}
             className="mt-1"
           />
@@ -198,6 +223,7 @@ const CreateMoviePage: React.FC = () => {
           <Input
             id="runtime"
             type="number"
+            defaultValue={120}
             {...register("runtime", {
               required: "Runtime is required",
               valueAsNumber: true,

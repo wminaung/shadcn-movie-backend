@@ -7,68 +7,20 @@ import Link from "next/link";
 import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 import { useMovieStore } from "@/store/movie";
 import { Movie } from "@/core/entity/Movie";
+import { Category } from "@/core/entity/Category";
 
 interface Props {
   customClassName?: string;
-  isViewAll?: boolean;
-  movieId?: string;
+  movie?: Movie;
   asImage?: boolean;
 }
 
 //https://images.plex.tv/photo?size=medium-360&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fc%2Fgracenote%2Fc307cf09b20216353316e6f18bf2756d.jpg
 
-const MyImageCard = ({
-  customClassName,
-  isViewAll,
-  movieId,
-  asImage,
-}: Props) => {
-  const { movies } = useMovieStore();
-  const [movie, setMovie] = useState<Movie | null>(null);
-
-  useEffect(() => {
-    if (movieId) {
-      setMovie(movies.find((m) => m.id === movieId) || null);
-    }
-  }, [movieId]);
+const MyImageCard = ({ customClassName, movie, asImage }: Props) => {
+  // const { movies } = useMovieStore();
 
   if (!movie) return <div>There is no movie</div>;
-
-  if (isViewAll) {
-    return (
-      <Card
-        className={cn(
-          "border-0 shadow-none animate-pulse dark:bg-gray-900 transition-all",
-          customClassName
-        )}
-      >
-        <MyAspectRatio
-          ratio={2 / 3}
-          width={10}
-          components={
-            <Link href={`/admin/movie?category=${movie.category}`}>
-              <Image
-                fill
-                src={
-                  "https://images.plex.tv/photo?size=medium-360&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fc%2Fgracenote%2Fc307cf09b20216353316e6f18bf2756d.jpg"
-                }
-                alt="movie"
-                className="object-cover transition-all  rounded hover:border-2 
-          hover:p-1 hover:border-slate-200 hover:cursor-pointer"
-              />
-            </Link>
-          }
-        />
-
-        {/* Footer Section */}
-        {/* <CardFooter className="flex flex-col justify-center items-start px-0 py-2">
-          <p className="text-sm">Movie Description</p>
-
-          <span>1946</span>
-        </CardFooter> */}
-      </Card>
-    );
-  }
 
   // ! in params
   if (asImage) {
@@ -100,7 +52,7 @@ const MyImageCard = ({
         ratio={2 / 3}
         width={10}
         components={
-          <Link href={`/admin/movie/${movieId}/edit`}>
+          <Link href={`/admin/movie/${movie.id}/edit`}>
             <Image
               fill
               src={

@@ -3,18 +3,22 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
 import MyImageCard from "@/components/MyImageCard";
+import { Movie } from "@/core/entity/Movie";
 import { useMovieStore } from "@/store/movie";
 
 import { useEffect, useState } from "react";
 interface Props {
-  searchParams: { title?: string; category?: string };
+  searchParams: { title?: string; category?: string; id?: string };
 }
 export default function AllMoviePage({ searchParams }: Props) {
-  const { movies, loading, error, filterMovies, filteredMovies } =
-    useMovieStore();
+  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+  const { movies, loading, error, filterMovies } = useMovieStore();
 
   useEffect(() => {
-    filterMovies(searchParams);
+    (async () => {
+      const movie = await filterMovies(searchParams);
+      setFilteredMovies(movie);
+    })();
   }, [searchParams, movies]);
 
   if (error) return <Error message={error} />;
@@ -25,7 +29,7 @@ export default function AllMoviePage({ searchParams }: Props) {
         {filteredMovies?.map((movie) => (
           <MyImageCard
             key={movie.id}
-            movieId={movie.id}
+            movie={movie}
             customClassName="w-[130px] xs:w-[120px] sm:w-[180px] md:w-[200px] lg:w-[200px]"
           />
         ))}

@@ -1,12 +1,16 @@
 import { Movie } from "@/core/entity/Movie";
-import { SearchOption } from "@/core/infrastructure/IMovieRepository";
 
+interface SearchParam {
+  categoryId?: string;
+  title?: string;
+  category?: string;
+}
 export interface MovieState {
   movies: Movie[];
-  filteredMovies: Movie[];
   loading: boolean;
   error: string | null;
-  filterMovies: (searchOption?: SearchOption) => void;
+  fetchMovies: () => Promise<void>;
+  filterMovies: (SearchParam: SearchParam) => Promise<Movie[]>;
   setMovies: (movies: Movie[]) => void;
   addMovie: (newMovie: Movie) => void;
   editMovie: (movie: Movie) => void;

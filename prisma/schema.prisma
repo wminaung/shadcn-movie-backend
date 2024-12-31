@@ -9,12 +9,32 @@ datasource db {
 }
 
 model Movie {
-  id           String @id @default(cuid())
+  id           String          @id @default(cuid())
   title        String
-  category     String
   release_year Int
   description  String
   rating       Float
   director     String
   runtime      Int
+  categories   MovieCategory[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model Category {
+  id        String          @id @default(cuid())
+  name      String          @unique
+  movies    MovieCategory[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model MovieCategory {
+  movieId    String
+  movie      Movie    @relation(fields: [movieId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@id([movieId, categoryId])
 }

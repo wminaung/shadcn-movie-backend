@@ -3,8 +3,12 @@ import Error from "@/components/Error";
 import Loading from "@/components/Loading";
 import MyImageCard from "@/components/MyImageCard";
 import { Button } from "@/components/ui/button";
-import { CreateMoviePayload } from "@/core/infrastructure/IMovieRepository";
-import { deleteMovie, updateMovie } from "@/store/movie/movieActions";
+import { CreateMoviePayload } from "@/core/infrastructure/movie/IMovieRepository";
+import {
+  deleteMovie,
+  deleteMoviesByCategoryIds,
+  updateMovie,
+} from "@/store/movie/movieActions";
 import { useMovieStore } from "@/store/movie";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -13,19 +17,35 @@ interface Props {
   params: { id: string };
 }
 
+import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
+import { MultiSelect } from "../multi-select";
+import { useCategoryStore } from "@/store/category/categoryStore";
+const frameworksList = [
+  { value: "react", label: "React", icon: Turtle },
+  { value: "angular", label: "Angular", icon: Cat },
+  { value: "vue", label: "Vue", icon: Dog },
+  { value: "svelte", label: "Svelte", icon: Rabbit },
+  { value: "ember", label: "Ember", icon: Fish },
+];
+
 const EditMovieByIdPage = ({ params }: Props) => {
   const [newMovie, setNewMovie] = useState<CreateMoviePayload | null>(null);
   const [disabled, setDisabled] = useState<boolean>(true);
   const [init, setInit] = useState(false);
   const { error, loading, movies, editMovie, removeMovie } = useMovieStore();
+  const { categories, filterCategories } = useCategoryStore();
   const router = useRouter();
   const [oldMovie, setOldMovie] = useState<CreateMoviePayload | null>(null);
-
   useEffect(() => {
-    if (!init) {
+    if (!init && movies.length > 0) {
       (async () => {
         const movie = movies.find((m) => m.id === params.id);
-
+        console.log("movie", movie);
+        const filteredCategories = await filterCategories({
+          movieId: params.id,
+        });
+        const filteredCategoryIds = filteredCategories.map((cat) => cat.id);
+        console.log("filteredCategoryIds", filteredCategoryIds);
         if (!movie) {
           console.log("There is no movie in state");
           setOldMovie(null);
@@ -33,21 +53,19 @@ const EditMovieByIdPage = ({ params }: Props) => {
           return;
         }
         const { id, ...movieWithoutId } = movie;
-        setNewMovie(movieWithoutId);
-        setOldMovie(movieWithoutId);
+        setNewMovie({ ...movieWithoutId, categoryIds: filteredCategoryIds });
+        setOldMovie({ ...movieWithoutId, categoryIds: filteredCategoryIds });
         setInit(true);
       })();
     }
+
     const newMovieJson = JSON.stringify(newMovie);
     const oldMovieJson = JSON.stringify(oldMovie);
     setDisabled(newMovieJson === oldMovieJson);
-  }, [newMovie]);
+  }, [newMovie, movies]);
 
   if (error) return <Error message={error} />;
   if (loading || !newMovie) return <Loading />;
-
-  // const id = params.id;
-  // const duration = convertMinutesToHoursAndSeconds(newMovie.runtime);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -76,6 +94,14 @@ const EditMovieByIdPage = ({ params }: Props) => {
       return;
     }
     editMovie(updatedMovie);
+    const filteredCategories = await filterCategories({
+      movieId: params.id,
+    });
+    const { id, ...movieWithoutId } = updatedMovie;
+    const filteredCategoryIds = filteredCategories.map((cat) => cat.id);
+    setNewMovie({ ...movieWithoutId, categoryIds: filteredCategoryIds });
+    setOldMovie({ ...movieWithoutId, categoryIds: filteredCategoryIds });
+
     alert("Movie updated successfully");
     setDisabled(false);
   };
@@ -85,7 +111,8 @@ const EditMovieByIdPage = ({ params }: Props) => {
       <div className=" mx-2 rounded-md">
         <MyImageCard
           asImage
-          movieId={params.id}
+          // movieId={params.id}
+          movie={{ ...newMovie, id: params.id }}
           customClassName="rounded-lg w-[180px] sm:w-[300px]"
         />
       </div>{" "}
@@ -135,17 +162,24 @@ const EditMovieByIdPage = ({ params }: Props) => {
               className="mb-2 p-2 border rounded w-full"
             />
           </div>
-          <div>
-            <label htmlFor="category">Category </label>
-            <input
-              type="text"
-              name="category"
-              value={newMovie.category}
-              onChange={handleChange}
-              placeholder="Category"
-              className="mb-2 p-2 border rounded w-full"
+
+          <div className="">
+            <MultiSelect
+              options={categories.map((cat) => ({
+                value: cat.id,
+                label: cat.name,
+              }))}
+              onValueChange={(value) => {
+                setNewMovie({ ...newMovie, categoryIds: value });
+              }}
+              defaultValue={oldMovie?.categoryIds}
+              placeholder="Select frameworks"
+              variant="inverted"
+              animation={2}
+              maxCount={3}
             />
           </div>
+          {/* // */}
           <div>
             <label htmlFor="Rating">Rating </label>
             <input
@@ -183,11 +217,14 @@ const EditMovieByIdPage = ({ params }: Props) => {
               className="active:scale-95 "
               onClick={async () => {
                 if (confirm("Are you sure want to delete this movie")) {
-                  const deletedMovie = await deleteMovie(params.id);
+                  const deletedMovie = await deleteMoviesByCategoryIds(
+                    params.id,
+                    oldMovie?.categoryIds
+                  );
                   if (deletedMovie) {
                     removeMovie(deletedMovie);
                     alert(`You deleted movie ${params.id}`);
-                    router.push("/");
+                    router.push("/admin/movies");
                   }
                 }
               }}
