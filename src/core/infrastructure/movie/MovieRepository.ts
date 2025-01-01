@@ -1,10 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { Movie } from "@/core/entity/Movie";
-import { IMovieRepository } from "./IMovieRepository";
-
-export interface GetAllMoviesSearchParams
-  extends Prisma.MovieFindManyArgs<DefaultArgs> {}
+import { GetAllMoviesOption, IMovieRepository } from "./IMovieRepository";
 
 export class MovieRepository implements IMovieRepository {
   constructor(private prisma: PrismaClient) {
@@ -65,8 +62,58 @@ export class MovieRepository implements IMovieRepository {
     return movie;
   }
 
-  async getAll(option?: GetAllMoviesSearchParams): Promise<Movie[]> {
-    const movies = await this.prisma.movie.findMany(option);
+  private generateGetAllOption(
+    option?: GetAllMoviesOption
+  ): Prisma.MovieFindManyArgs<DefaultArgs> | undefined {
+    const { category, title, categoryId } = option || {};
+
+    if (!category && !title && !categoryId) {
+      return undefined;
+    }
+    if (title) {
+      return {
+        where: {
+          title: {
+            contains: title,
+            mode: "insensitive",
+          },
+        },
+      };
+    }
+    if (categoryId) {
+      return {
+        where: {
+          categories: {
+            some: {
+              categoryId: categoryId,
+            },
+          },
+        },
+      };
+    }
+    if (category) {
+      return {
+        where: {
+          categories: {
+            some: {
+              category: {
+                name: {
+                  equals: category,
+                  mode: "insensitive",
+                },
+              },
+            },
+          },
+        },
+      };
+    }
+    return undefined;
+  }
+
+  async getAll(option?: GetAllMoviesOption): Promise<Movie[]> {
+    const getAllOption = this.generateGetAllOption(option);
+
+    const movies = await this.prisma.movie.findMany(getAllOption);
 
     return movies.map((movie) => movie);
   }

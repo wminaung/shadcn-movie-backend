@@ -40,7 +40,7 @@ const Navbar = () => {
     }
   };
   const handleClickCreateBtn = () => {
-    navigation.push(`/admin/movie/create`);
+    navigation.push(`/admin/create`);
   };
 
   return (

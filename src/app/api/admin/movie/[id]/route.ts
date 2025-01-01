@@ -10,8 +10,10 @@ import { ApiError } from "@/app/api/ApiError";
 export async function PUT(request: NextRequest, { params }: ParamsProps) {
   const token = apiAuthCheck(request);
   if (!token) {
-    const apiError = new ApiError("Unauthorized", 401);
-    return NextResponse.json(apiError, { status: 401 });
+    return NextResponse.json(
+      { error: "unauthorized, Please get token first" },
+      { status: 401 }
+    );
   }
   const id = params["id"];
   const newMovie = (await request.json()) as Movie;
@@ -26,8 +28,10 @@ export async function PUT(request: NextRequest, { params }: ParamsProps) {
 export async function DELETE(request: NextRequest, { params }: ParamsProps) {
   const token = apiAuthCheck(request);
   if (!token) {
-    const apiError = new ApiError("Unauthorized", 401);
-    return NextResponse.json(apiError, { status: 401 });
+    return NextResponse.json(
+      { error: "unauthorized, Please get token first" },
+      { status: 401 }
+    );
   }
   const id = params["id"];
 

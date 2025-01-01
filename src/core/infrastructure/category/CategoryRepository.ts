@@ -1,10 +1,12 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { ICategoryRepository } from "./ICategoryRepository";
+import {
+  GetAllCategoriesOption,
+  ICategoryRepository,
+} from "./ICategoryRepository";
 import { Category } from "@/core/entity/Category";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
-export interface GetAllCategoriesSearchParams
-  extends Prisma.CategoryFindManyArgs<DefaultArgs> {}
+// extends Prisma.CategoryFindManyArgs<DefaultArgs>
 
 export class CategoryRepository implements ICategoryRepository {
   constructor(private prisma: PrismaClient) {
@@ -21,8 +23,42 @@ export class CategoryRepository implements ICategoryRepository {
     return category;
   }
 
-  async getAll(option?: GetAllCategoriesSearchParams): Promise<Category[]> {
-    const categories = await this.prisma.category.findMany(option);
+  private generateGetAllCategoriesOption(
+    option?: GetAllCategoriesOption
+  ): Prisma.CategoryFindManyArgs<DefaultArgs> | undefined {
+    const { movieId, name } = option || {};
+    if (!movieId && !name) return undefined;
+
+    if (movieId) {
+      return {
+        where: {
+          movies: {
+            some: {
+              movieId: movieId,
+            },
+          },
+        },
+      };
+    }
+    if (name) {
+      return {
+        where: {
+          name: {
+            contains: name,
+            mode: "insensitive",
+          },
+        },
+      };
+    }
+
+    return undefined;
+  }
+
+  async getAll(option?: GetAllCategoriesOption): Promise<Category[]> {
+    const GetAllCategoriesOption = this.generateGetAllCategoriesOption(option);
+    const categories = await this.prisma.category.findMany(
+      GetAllCategoriesOption
+    );
 
     return categories.map((category) => category);
   }

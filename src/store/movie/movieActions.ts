@@ -1,17 +1,16 @@
 "use server";
 
 import { movieService } from "@/core";
-import { Movie } from "@/core/entity/Movie";
 import {
   CreateMoviePayload,
+  GetAllMoviesOption,
   UpdateMoviePayload,
 } from "@/core/infrastructure/movie/IMovieRepository";
-import { GetAllMoviesSearchParams } from "@/core/infrastructure/movie/MovieRepository";
 
 import { authCheck } from "@/lib/utils";
 
-export const getAllMovies = async (params?: GetAllMoviesSearchParams) => {
-  return movieService.getAll(params);
+export const getAllMovies = async (option?: GetAllMoviesOption) => {
+  return movieService.getAll(option);
 };
 
 export const getMovie = async (id: string) => {

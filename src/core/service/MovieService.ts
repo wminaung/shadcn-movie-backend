@@ -1,12 +1,12 @@
 import { Movie } from "@/core/entity/Movie";
 import {
   CreateMoviePayload,
+  GetAllMoviesOption,
   IMovieRepository,
   UpdateMoviePayload,
 } from "@/core/infrastructure/movie/IMovieRepository";
 import { z } from "zod";
 import { ICategoryRepository } from "../infrastructure/category/ICategoryRepository";
-import { GetAllMoviesSearchParams } from "../infrastructure/movie/MovieRepository";
 
 export class MovieService {
   constructor(
@@ -41,7 +41,7 @@ export class MovieService {
     return movie;
   }
 
-  async getAll(option?: GetAllMoviesSearchParams): Promise<Movie[]> {
+  async getAll(option?: GetAllMoviesOption): Promise<Movie[]> {
     return await this.movieRepository.getAll(option);
   }
 
@@ -117,13 +117,7 @@ export class MovieService {
       throw new Error("Movie not found");
     }
     return await this.categoryRepository.getAll({
-      where: {
-        movies: {
-          some: {
-            movieId: movieId,
-          },
-        },
-      },
+      movieId,
     });
   }
 
@@ -161,9 +155,7 @@ export class MovieService {
 
   async getMoviesByTitle(title: string): Promise<Movie[]> {
     return await this.movieRepository.getAll({
-      where: {
-        title,
-      },
+      title,
     });
   }
 
@@ -173,12 +165,7 @@ export class MovieService {
     }
 
     const categories = await this.categoryRepository.getAll({
-      where: {
-        name: {
-          equals: categoryName,
-          mode: "insensitive",
-        },
-      },
+      name: categoryName,
     });
 
     if (!categories.length) {
@@ -186,13 +173,7 @@ export class MovieService {
     }
 
     return this.movieRepository.getAll({
-      where: {
-        categories: {
-          some: {
-            categoryId: categories[0].id,
-          },
-        },
-      },
+      category: categoryName,
     });
   }
 
@@ -202,13 +183,7 @@ export class MovieService {
       throw new Error("Category not found");
     }
     return this.movieRepository.getAll({
-      where: {
-        categories: {
-          some: {
-            categoryId: categoryId,
-          },
-        },
-      },
+      categoryId: categoryId,
     });
   }
 

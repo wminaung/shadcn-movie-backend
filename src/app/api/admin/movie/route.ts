@@ -7,8 +7,10 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function POST(request: NextRequest) {
   const token = apiAuthCheck(request);
   if (!token) {
-    const apiError = new ApiError("unauthorized", 401);
-    return NextResponse.json(apiError, { status: 401 });
+    return NextResponse.json(
+      { error: "unauthorized, Please get token first" },
+      { status: 401 }
+    );
   }
   const data = (await request.json()) as CreateMoviePayload;
 

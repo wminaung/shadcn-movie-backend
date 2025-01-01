@@ -17,7 +17,7 @@ const ProfileTag = () => {
 
   useEffect(() => {
     if (status === "authenticated") {
-      console.log("User is authenticated:", session.user?.email);
+      console.info("User is authenticated:", session.user?.email);
     }
   }, [status, session]);
 

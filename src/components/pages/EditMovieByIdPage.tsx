@@ -5,7 +5,6 @@ import MyImageCard from "@/components/MyImageCard";
 import { Button } from "@/components/ui/button";
 import { CreateMoviePayload } from "@/core/infrastructure/movie/IMovieRepository";
 import {
-  deleteMovie,
   deleteMoviesByCategoryIds,
   updateMovie,
 } from "@/store/movie/movieActions";
@@ -40,14 +39,12 @@ const EditMovieByIdPage = ({ params }: Props) => {
     if (!init && movies.length > 0) {
       (async () => {
         const movie = movies.find((m) => m.id === params.id);
-        console.log("movie", movie);
         const filteredCategories = await filterCategories({
           movieId: params.id,
         });
         const filteredCategoryIds = filteredCategories.map((cat) => cat.id);
-        console.log("filteredCategoryIds", filteredCategoryIds);
         if (!movie) {
-          console.log("There is no movie in state");
+          console.info("There is no movie in state");
           setOldMovie(null);
           setNewMovie(null);
           return;
