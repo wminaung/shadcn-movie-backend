@@ -14,8 +14,10 @@ import { Button } from "../ui/button";
 import { getAllCategory } from "@/store/category/categoryActions";
 
 export default function HomePage() {
-  const { categories } = useCategoryStore();
+  const { categories, loading, error } = useCategoryStore();
 
+  if (loading) return <Loading />;
+  if (error) return <Error message={error} />;
   return (
     <div className="container mx-auto px-2 xs:px-3 md:px-0 transition-all lg:px-4 md:mx-auto">
       {categories.map((category) => (

@@ -1,7 +1,6 @@
 "use client";
 import { create } from "zustand";
 import { MovieState } from "./types";
-import { movieService } from "@/core";
 import {
   getAllMovies,
   getMoviesByCategoryId,
@@ -25,18 +24,28 @@ export const useMovieStore = create<MovieState>((set) => ({
   },
 
   filterMovies: async (searchParam) => {
-    if (searchParam?.category) {
-      const movies = await getMoviesByCategoryName(searchParam.category);
+    set({ loading: true });
+    try {
+      if (searchParam?.category) {
+        const movies = await getMoviesByCategoryName(searchParam.category);
+        return movies;
+      }
+      if (searchParam?.title) {
+        const movies = await getMoviesByTitle(searchParam.title);
+        return movies;
+      }
+      if (searchParam.categoryId) {
+        const movies = await getMoviesByCategoryId(searchParam.categoryId);
+        return movies;
+      }
+      const movies = await getAllMovies();
       return movies;
+    } catch (error) {
+      set({ error: "Failed to fetch movies", loading: false });
+      return [];
+    } finally {
+      set({ loading: false });
     }
-    if (searchParam?.title) {
-      const movies = await getMoviesByTitle(searchParam.title);
-      return movies;
-    }
-    if (searchParam.categoryId) {
-      return await getMoviesByCategoryId(searchParam.categoryId);
-    }
-    return await getAllMovies();
   },
   addMovie: async (newMovie) => {
     set((state) => ({
