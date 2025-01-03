@@ -10,10 +10,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
-const ProfileTag = () => {
+interface Props {
+  toggleMenu?: () => void;
+}
+const ProfileTag = ({ toggleMenu }: Props) => {
   const { data: session, status } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -53,7 +58,10 @@ const ProfileTag = () => {
         </DropdownMenu>
       ) : (
         <Button
-          onClick={() => signIn("google")}
+          onClick={() => {
+            router.push("/admin/login");
+            toggleMenu && toggleMenu();
+          }}
           className="bg-blue-600 text-white hover:bg-blue-700"
         >
           Login with Google
