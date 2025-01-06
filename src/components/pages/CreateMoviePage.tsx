@@ -13,6 +13,7 @@ import { CreateMoviePayload } from "@/core/infrastructure/movie/IMovieRepository
 import { MultiSelect } from "../multi-select";
 import { useCategoryStore } from "@/store/category/categoryStore";
 import Link from "next/link";
+import Notification from "../Notification";
 
 const CreateMoviePage: React.FC = () => {
   const {
@@ -24,7 +25,7 @@ const CreateMoviePage: React.FC = () => {
   } = useForm<CreateMoviePayload>();
   const { addMovie, error, loading } = useMovieStore();
   const { categories } = useCategoryStore();
-  const [alertMessage, setAlertMessage] = useState<{
+  const [notification, setNotification] = useState<{
     message: string;
     redirectUrl: string;
     createdMovie: Movie;
@@ -39,8 +40,8 @@ const CreateMoviePage: React.FC = () => {
       console.log("Movie Create Fail!!!!!!!!");
     } else {
       addMovie(newMovie);
-      setAlertMessage({
-        message: `created successfully:${newMovie.title}`,
+      setNotification({
+        message: `created successfully: `,
         redirectUrl: `/admin/movie/${newMovie.id}/edit`,
         createdMovie: newMovie,
       });
@@ -48,7 +49,10 @@ const CreateMoviePage: React.FC = () => {
 
     reset(); // Clear the input fields after submission
 
-    setTimeout(() => setAlertMessage(null), 5000); // Hide alert after 5 seconds
+    setTimeout(() => setNotification(null), 5000); // Hide alert after 5 seconds
+  };
+  const close = () => {
+    setNotification(null);
   };
 
   if (error)
@@ -72,30 +76,9 @@ const CreateMoviePage: React.FC = () => {
   return (
     <div className="max-w-lg mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Create New Movie</h1>
-      {alertMessage && (
-        <div
-          className="fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded "
-          role="alert"
-        >
-          <div className="pr-8">
-            <strong className="font-bold">Success!</strong>
-            <span className="block sm:inline">
-              {alertMessage.message}{" "}
-              <Link
-                className="text-violet-800 underline"
-                href={alertMessage.redirectUrl}
-              >
-                {alertMessage.createdMovie.title}
-              </Link>
-            </span>
-          </div>
-          <button
-            onClick={() => setAlertMessage(null)}
-            className="absolute top-0 bottom-0 right-0 px-4 py-3"
-          >
-            <span className="text-green-700">&times;</span>
-          </button>
-        </div>
+
+      {notification && (
+        <Notification notification={notification} close={close} />
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
