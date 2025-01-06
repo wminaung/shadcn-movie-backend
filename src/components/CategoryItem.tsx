@@ -21,7 +21,7 @@ const CategoryItem = ({ category }: { category: Category }) => {
       {...attributes}
       {...listeners}
       style={style}
-      className=" bg-[#121212] p-4 active:cursor-grabbing hover:cursor-grab rounded-lg shadow-md hover:shadow-lg  relative"
+      className=" bg-[#121212] p-4 active:cursor-grabbing hover:cursor-grab touch-none rounded-lg shadow-md hover:shadow-lg  relative"
     >
       <div className="flex items-center space-x-2">
         <FiFilm className="text-blue-500 text-2xl" />
