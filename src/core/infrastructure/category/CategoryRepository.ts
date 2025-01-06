@@ -3,7 +3,7 @@ import {
   GetAllCategoriesOption,
   ICategoryRepository,
 } from "./ICategoryRepository";
-import { Category } from "@/core/entity/Category";
+import { Category, CreateCategoryPayload } from "@/core/entity/Category";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
 // extends Prisma.CategoryFindManyArgs<DefaultArgs>
@@ -25,9 +25,8 @@ export class CategoryRepository implements ICategoryRepository {
 
   private generateGetAllCategoriesOption(
     option?: GetAllCategoriesOption
-  ): Prisma.CategoryFindManyArgs<DefaultArgs> | undefined {
+  ): Prisma.CategoryFindManyArgs<DefaultArgs> {
     const { movieId, name } = option || {};
-    if (!movieId && !name) return undefined;
 
     if (movieId) {
       return {
@@ -37,6 +36,9 @@ export class CategoryRepository implements ICategoryRepository {
               movieId: movieId,
             },
           },
+        },
+        orderBy: {
+          name: "asc",
         },
       };
     }
@@ -48,10 +50,17 @@ export class CategoryRepository implements ICategoryRepository {
             mode: "insensitive",
           },
         },
+        orderBy: {
+          name: "asc",
+        },
       };
     }
 
-    return undefined;
+    return {
+      orderBy: {
+        name: "asc",
+      },
+    };
   }
 
   async getAll(option?: GetAllCategoriesOption): Promise<Category[]> {
@@ -63,7 +72,7 @@ export class CategoryRepository implements ICategoryRepository {
     return categories.map((category) => category);
   }
 
-  async create(data: Omit<Category, "id">): Promise<Category> {
+  async create(data: CreateCategoryPayload): Promise<Category> {
     const category = await this.prisma.category.create({ data: data });
     return category;
   }

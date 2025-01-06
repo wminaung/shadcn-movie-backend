@@ -7,6 +7,7 @@ import {
 } from "@/core/infrastructure/movie/IMovieRepository";
 import { z } from "zod";
 import { ICategoryRepository } from "../infrastructure/category/ICategoryRepository";
+import { CreateCategoryPayload } from "../entity/Category";
 
 export class MovieService {
   constructor(
@@ -225,6 +226,10 @@ export class MovieService {
 
   private validateRating(rating: number): boolean {
     return rating >= 0 && rating <= 10;
+  }
+
+  async createCategory(newCat: CreateCategoryPayload) {
+    return await this.categoryRepository.create(newCat);
   }
 
   //

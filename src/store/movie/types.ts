@@ -7,10 +7,14 @@ interface SearchParam {
 }
 export interface MovieState {
   movies: Movie[];
+  filteredMovies: Movie[];
   loading: boolean;
   error: string | null;
+
   fetchMovies: () => Promise<void>;
-  filterMovies: (SearchParam: SearchParam) => Promise<Movie[]>;
+  filterMovies: (SearchParam: SearchParam) => void;
+  setFilteredMovies: (filteredMovies: Movie[]) => void;
+  filteredMoviesByCatId: (catId: string) => Promise<Movie[]>;
   setMovies: (movies: Movie[]) => void;
   addMovie: (newMovie: Movie) => void;
   editMovie: (movie: Movie) => void;

@@ -10,8 +10,10 @@ import {
 
 export const useMovieStore = create<MovieState>((set) => ({
   movies: [],
+  filteredMovies: [],
   loading: false,
   error: null,
+
   setMovies: (movies) => set({ movies }),
   fetchMovies: async () => {
     set({ loading: true });
@@ -22,27 +24,33 @@ export const useMovieStore = create<MovieState>((set) => ({
       set({ error: "Failed to fetch movies", loading: false });
     }
   },
-
+  filteredMoviesByCatId: async (catId) => {
+    const filteredMovies = await getMoviesByCategoryId(catId);
+    return filteredMovies;
+  },
+  setFilteredMovies: (filteredMovies) => {
+    set({ loading: true });
+    set({ filteredMovies: filteredMovies });
+    set({ loading: false });
+  },
   filterMovies: async (searchParam) => {
     set({ loading: true });
     try {
+      let movies;
+
       if (searchParam?.category) {
-        const movies = await getMoviesByCategoryName(searchParam.category);
-        return movies;
+        movies = await getMoviesByCategoryName(searchParam.category);
+      } else if (searchParam?.title) {
+        movies = await getMoviesByTitle(searchParam.title);
+      } else if (searchParam?.categoryId) {
+        movies = await getMoviesByCategoryId(searchParam.categoryId);
+      } else {
+        movies = await getAllMovies();
       }
-      if (searchParam?.title) {
-        const movies = await getMoviesByTitle(searchParam.title);
-        return movies;
-      }
-      if (searchParam.categoryId) {
-        const movies = await getMoviesByCategoryId(searchParam.categoryId);
-        return movies;
-      }
-      const movies = await getAllMovies();
-      return movies;
+
+      set({ filteredMovies: movies });
     } catch (error) {
-      set({ error: "Failed to fetch movies", loading: false });
-      return [];
+      set({ error: "Failed to fetch movies" });
     } finally {
       set({ loading: false });
     }

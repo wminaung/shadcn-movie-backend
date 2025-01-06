@@ -11,13 +11,20 @@ interface Props {
   searchParams: { title?: string; category?: string; id?: string };
 }
 export default function AllMoviePage({ searchParams }: Props) {
-  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
-  const { movies, loading, error, filterMovies } = useMovieStore();
+  // const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+  const {
+    movies,
+    loading,
+    error,
+    filterMovies,
+    filteredMovies,
+    setFilteredMovies,
+  } = useMovieStore();
 
   useEffect(() => {
     (async () => {
-      const movie = await filterMovies(searchParams);
-      setFilteredMovies(movie);
+      setFilteredMovies([]);
+      filterMovies(searchParams);
     })();
   }, [searchParams, movies]);
 

@@ -12,6 +12,7 @@ import { createMovie } from "@/store/movie/movieActions";
 import { CreateMoviePayload } from "@/core/infrastructure/movie/IMovieRepository";
 import { MultiSelect } from "../multi-select";
 import { useCategoryStore } from "@/store/category/categoryStore";
+import Link from "next/link";
 
 const CreateMoviePage: React.FC = () => {
   const {
@@ -23,7 +24,11 @@ const CreateMoviePage: React.FC = () => {
   } = useForm<CreateMoviePayload>();
   const { addMovie, error, loading } = useMovieStore();
   const { categories } = useCategoryStore();
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertMessage, setAlertMessage] = useState<{
+    message: string;
+    redirectUrl: string;
+    createdMovie: Movie;
+  } | null>(null);
 
   const onSubmit: SubmitHandler<CreateMoviePayload> = async (data) => {
     if (!data) {
@@ -34,10 +39,15 @@ const CreateMoviePage: React.FC = () => {
       console.log("Movie Create Fail!!!!!!!!");
     } else {
       addMovie(newMovie);
+      setAlertMessage({
+        message: `created successfully:${newMovie.title}`,
+        redirectUrl: `/admin/movie/${newMovie.id}/edit`,
+        createdMovie: newMovie,
+      });
     }
 
     reset(); // Clear the input fields after submission
-    setAlertMessage(`You created a new movie: ${data.title}`);
+
     setTimeout(() => setAlertMessage(null), 5000); // Hide alert after 5 seconds
   };
 
@@ -51,7 +61,7 @@ const CreateMoviePage: React.FC = () => {
           <strong className="font-bold">Error!</strong>
           <span className="block sm:inline">
             {error}
-            <a href="/movie/create"> refresh</a>
+            <a href="/admin/create/movie"> refresh</a>
           </span>
         </div>
       </div>
@@ -67,8 +77,18 @@ const CreateMoviePage: React.FC = () => {
           className="fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded "
           role="alert"
         >
-          <strong className="font-bold">Success!</strong>
-          <span className="block sm:inline">{alertMessage}</span>
+          <div className="pr-8">
+            <strong className="font-bold">Success!</strong>
+            <span className="block sm:inline">
+              {alertMessage.message}{" "}
+              <Link
+                className="text-violet-800 underline"
+                href={alertMessage.redirectUrl}
+              >
+                {alertMessage.createdMovie.title}
+              </Link>
+            </span>
+          </div>
           <button
             onClick={() => setAlertMessage(null)}
             className="absolute top-0 bottom-0 right-0 px-4 py-3"
@@ -119,15 +139,6 @@ const CreateMoviePage: React.FC = () => {
               maxCount={3}
             />
           </div>
-          {/* <Input
-            id="category"
-            type="text"
-            {...register("category", { required: "Category is required" })}
-            className="mt-1"
-          />
-          {errors.category && (
-            <p className="text-red-500 text-sm">{errors.category.message}</p>
-          )} */}
         </div>
         <div>
           <label

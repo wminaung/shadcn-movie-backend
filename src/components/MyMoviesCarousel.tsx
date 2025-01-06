@@ -16,6 +16,8 @@ import { FaArrowAltCircleRight } from "react-icons/fa";
 import ViewAll from "./ViewAll";
 import { useRouter } from "next/navigation";
 import { useMovieStore } from "@/store/movie";
+import Loading from "./Loading";
+import { Separator } from "./ui/separator";
 //sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5
 
 interface Props {
@@ -23,17 +25,17 @@ interface Props {
 }
 const MyMoviesCarousel = ({ category }: Props) => {
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
-
-  const { filterMovies } = useMovieStore();
+  const { filteredMoviesByCatId } = useMovieStore();
 
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
-      const movies = await filterMovies({ categoryId: category.id });
+      const movies = await filteredMoviesByCatId(category.id);
       setFilteredMovies(movies);
     })();
   }, [category]);
+
   if (!filteredMovies.length) return null;
 
   return (
@@ -50,7 +52,6 @@ const MyMoviesCarousel = ({ category }: Props) => {
           {category.name} <FaArrowAltCircleRight />
         </MyButton>
       </h3>
-
       <div className="container ">
         <Carousel
           opts={{
@@ -67,15 +68,14 @@ const MyMoviesCarousel = ({ category }: Props) => {
               >
                 <MyImageCard
                   movie={movie}
-                  customClassName=" w-[150px] sm:w-[160px] md:w-[180px] lg:w-[220px]"
+                  customClassName=" w-[100px] sm:w-[160px] md:w-[170px] lg:w-[220px]"
                 />
               </CarouselItem>
             ))}
-
             <CarouselItem className="basis-2/2 sm:basis-1/3 md:basis-1/4 lg:basis:1/5 xl:basis-1/5">
               <ViewAll
                 category={category}
-                customClassName=" w-[150px] sm:w-[160px] md:w-[180px] lg:w-[220px]"
+                customClassName=" w-[100px] sm:w-[160px] md:w-[170px] lg:w-[220px]"
               />
             </CarouselItem>
           </CarouselContent>
@@ -85,6 +85,7 @@ const MyMoviesCarousel = ({ category }: Props) => {
           </div>
         </Carousel>
       </div>
+      <Separator orientation="horizontal" />
     </div>
   );
 };

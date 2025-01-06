@@ -16,16 +16,9 @@ interface Props {
   params: { id: string };
 }
 
-import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
 import { MultiSelect } from "../multi-select";
 import { useCategoryStore } from "@/store/category/categoryStore";
-const frameworksList = [
-  { value: "react", label: "React", icon: Turtle },
-  { value: "angular", label: "Angular", icon: Cat },
-  { value: "vue", label: "Vue", icon: Dog },
-  { value: "svelte", label: "Svelte", icon: Rabbit },
-  { value: "ember", label: "Ember", icon: Fish },
-];
+import MovieNotFound from "../MovieNotFound";
 
 const EditMovieByIdPage = ({ params }: Props) => {
   const [newMovie, setNewMovie] = useState<CreateMoviePayload | null>(null);
@@ -35,10 +28,15 @@ const EditMovieByIdPage = ({ params }: Props) => {
   const { categories, filterCategories } = useCategoryStore();
   const router = useRouter();
   const [oldMovie, setOldMovie] = useState<CreateMoviePayload | null>(null);
+
+  const [invalidId, setInvalidId] = useState(false);
+
   useEffect(() => {
     if (!init && movies.length > 0) {
       (async () => {
         const movie = movies.find((m) => m.id === params.id);
+        if (!movie) return setInvalidId(true);
+
         const filteredCategories = await filterCategories({
           movieId: params.id,
         });
@@ -60,6 +58,10 @@ const EditMovieByIdPage = ({ params }: Props) => {
     const oldMovieJson = JSON.stringify(oldMovie);
     setDisabled(newMovieJson === oldMovieJson);
   }, [newMovie, movies]);
+
+  if (invalidId) {
+    return <MovieNotFound />;
+  }
 
   if (error) return <Error message={error} />;
   if (loading || !newMovie) return <Loading />;
@@ -169,6 +171,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
               onValueChange={(value) => {
                 setNewMovie({ ...newMovie, categoryIds: value });
               }}
+              style={{ backgroundColor: "#121212" }}
               defaultValue={oldMovie?.categoryIds}
               placeholder="Select frameworks"
               variant="inverted"
