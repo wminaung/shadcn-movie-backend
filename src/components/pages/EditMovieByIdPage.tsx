@@ -224,7 +224,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
                   if (deletedMovie) {
                     removeMovie(deletedMovie);
                     alert(`You deleted movie ${params.id}`);
-                    router.push("/admin/movies");
+                    router.push("/admin/movie");
                   }
                 }
               }}

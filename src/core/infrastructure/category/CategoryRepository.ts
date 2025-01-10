@@ -1,9 +1,10 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import {
+  CreateCategoryPayload,
   GetAllCategoriesOption,
   ICategoryRepository,
 } from "./ICategoryRepository";
-import { Category, CreateCategoryPayload } from "@/core/entity/Category";
+import { Category } from "@/core/entity/Category";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
 // extends Prisma.CategoryFindManyArgs<DefaultArgs>

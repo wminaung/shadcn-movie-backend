@@ -5,7 +5,6 @@ import {
   getAllCategory,
   getCategoriesByMovieId,
 } from "./categoryActions";
-import { movieService } from "@/core";
 export const useCategoryStore = create<CategoryState>((set) => ({
   categories: [],
   loading: false,
@@ -14,6 +13,7 @@ export const useCategoryStore = create<CategoryState>((set) => ({
   createNewCategory: async (newCat) => {
     if (!newCat.name) return;
     const createdCat = await createNewCat(newCat);
+    if (!createdCat) return;
     set((state) => ({ categories: [...state.categories, createdCat] }));
   },
   filterCategories: async (searchParam) => {

@@ -1,12 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import { MovieRepository } from "@/core/infrastructure/movie/MovieRepository";
-import { MovieService } from "@/core/service/MovieService";
-import { CategoryRepository } from "./infrastructure/category/CategoryRepository";
+import {
+  createCategoryService,
+  createMovieService,
+} from "./movieServiceFactory";
 
-const prisma = new PrismaClient();
-const movieRepository = new MovieRepository(prisma);
-const categoryRepository = new CategoryRepository(prisma);
-export const movieService = new MovieService(
-  movieRepository,
-  categoryRepository
-);
+export const movieService = createMovieService(); // Service is created with dependencies
+export const categoryService = createCategoryService();

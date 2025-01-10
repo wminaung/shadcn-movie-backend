@@ -1,5 +1,3 @@
-import { Category } from "./Category";
-
 export class Movie {
   constructor(
     public id: string,

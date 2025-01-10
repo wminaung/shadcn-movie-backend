@@ -5,18 +5,18 @@ import {
   IMovieRepository,
   UpdateMoviePayload,
 } from "@/core/infrastructure/movie/IMovieRepository";
-import { z } from "zod";
 import { ICategoryRepository } from "../infrastructure/category/ICategoryRepository";
-import { CreateCategoryPayload } from "../entity/Category";
+import { IMovieValidation } from "../validation/IMovieValidation";
 
 export class MovieService {
   constructor(
     private movieRepository: IMovieRepository,
+    private movieValidation: IMovieValidation,
     private categoryRepository: ICategoryRepository
   ) {}
 
   async create(data: CreateMoviePayload): Promise<Movie | null> {
-    if (!this.validateMovieData(data)) {
+    if (!this.movieValidation.createMovieData(data)) {
       return null;
     }
 
@@ -47,6 +47,7 @@ export class MovieService {
   }
 
   async get(id: string): Promise<Movie | null> {
+    if (!id) return null;
     return await this.movieRepository.get(id);
   }
 
@@ -54,6 +55,9 @@ export class MovieService {
     id: string,
     data: Partial<UpdateMoviePayload>
   ): Promise<Movie | null> {
+    const isValidData = this.movieValidation.updateMovieData(data);
+    if (!id || !isValidData) return null;
+
     const { categoryIds, ...dataToUpdate } = data;
     const movie = await this.movieRepository.get(id);
 
@@ -84,6 +88,7 @@ export class MovieService {
   }
 
   async delete(id: string): Promise<Movie | null> {
+    if (!id) return null;
     const movieExist = await this.movieRepository.get(id);
     if (!movieExist) {
       return null;
@@ -96,6 +101,8 @@ export class MovieService {
     id: string,
     categoryIds?: string[]
   ): Promise<Movie | null> {
+    if (!id) return null;
+
     const movieExist = await this.movieRepository.get(id);
     if (!movieExist) {
       return null;
@@ -108,8 +115,10 @@ export class MovieService {
     return deletedMovie;
   }
 
-  async getAllCategory() {
-    return await this.categoryRepository.getAll();
+  async getMoviesByTitle(title: string): Promise<Movie[]> {
+    return await this.movieRepository.getAll({
+      title,
+    });
   }
 
   async getCategoriesByMovieId(movieId: string) {
@@ -122,43 +131,38 @@ export class MovieService {
     });
   }
 
-  // TODO
-  async addMovieCategory(movieId: string, categoryId: string) {
-    const movie = await this.movieRepository.get(movieId);
-    const category = await this.categoryRepository.get(categoryId);
+  // ?! idk
+  // async addMovieCategory(movieId: string, categoryId: string) {
+  //   const movie = await this.movieRepository.get(movieId);
+  //   const category = await this.categoryRepository.get(categoryId);
 
-    if (!movie || !category) {
-      throw new Error("Movie or category not found");
-    }
+  //   if (!movie || !category) {
+  //     throw new Error("Movie or category not found");
+  //   }
 
-    try {
-      await this.movieRepository.addCategory(movieId, categoryId);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Failed to add category: ${error.message}`);
-      }
-      throw error;
-    }
-  }
-  async removeMovieCategory(
-    movieId: string,
-    categoryId: string
-  ): Promise<void> {
-    const movie = await this.movieRepository.get(movieId);
-    const category = await this.categoryRepository.get(categoryId);
+  //   try {
+  //     await this.movieRepository.addCategory(movieId, categoryId);
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       throw new Error(`Failed to add category: ${error.message}`);
+  //     }
+  //     throw error;
+  //   }
+  // }
+  // ?! idk
+  // async removeMovieCategory(
+  //   movieId: string,
+  //   categoryId: string
+  // ): Promise<void> {
+  //   const movie = await this.movieRepository.get(movieId);
+  //   const category = await this.categoryRepository.get(categoryId);
 
-    if (!movie || !category) {
-      throw new Error("Movie or category not found");
-    }
+  //   if (!movie || !category) {
+  //     throw new Error("Movie or category not found");
+  //   }
 
-    await this.movieRepository.removeCategory(movieId, categoryId);
-  }
-
-  async getMoviesByTitle(title: string): Promise<Movie[]> {
-    return await this.movieRepository.getAll({
-      title,
-    });
-  }
+  //   await this.movieRepository.removeCategory(movieId, categoryId);
+  // }
 
   async getMoviesByCategoryName(categoryName: string): Promise<Movie[]> {
     if (!categoryName) {
@@ -187,50 +191,4 @@ export class MovieService {
       categoryId: categoryId,
     });
   }
-
-  async searchMovies(query: string): Promise<Movie[]> {
-    if (!query) {
-      throw new Error("Search query is required");
-    }
-    return this.movieRepository.getAll({});
-  }
-
-  async filterMoviesByRating(minRating: number): Promise<Movie[]> {
-    if (!this.validateRating(minRating)) {
-      throw new Error("Invalid rating value");
-    }
-    const movies = await this.movieRepository.getAll();
-    return movies.filter((movie) => movie.rating >= minRating);
-  }
-
-  async filterMoviesByYear(year: number): Promise<Movie[]> {
-    if (year < 1900 || year > new Date().getFullYear()) {
-      throw new Error("Invalid year");
-    }
-    const movies = await this.movieRepository.getAll();
-    return movies.filter((movie) => movie.release_year === year);
-  }
-
-  private validateMovieData(data: Partial<Movie>): boolean {
-    const movieSchema = z.object({
-      title: z.string().min(1).optional(),
-      description: z.string().min(5).optional(),
-      director: z.string().min(1).optional(),
-      rating: z.number().min(0).max(10).optional(),
-      release_year: z.number().min(1900).optional(),
-      runtime: z.number().min(1).optional(),
-    });
-
-    return movieSchema.safeParse(data).success;
-  }
-
-  private validateRating(rating: number): boolean {
-    return rating >= 0 && rating <= 10;
-  }
-
-  async createCategory(newCat: CreateCategoryPayload) {
-    return await this.categoryRepository.create(newCat);
-  }
-
-  //
 }
