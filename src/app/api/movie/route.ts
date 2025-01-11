@@ -8,7 +8,8 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("categoryId") || undefined;
 
   if (!title && !category && !categoryId) {
-    return await movieService.getAll();
+    const movies = await movieService.getAll();
+    return NextResponse.json(movies);
   }
 
   if (
