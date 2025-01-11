@@ -1,5 +1,6 @@
 import { movieService } from "@/core";
-import { NextResponse, type NextRequest } from "next/server";
+import { response } from "@/lib/response";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const title = request.nextUrl.searchParams.get("title") || undefined;
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   if (!title && !category && !categoryId) {
     const movies = await movieService.getAll();
-    return NextResponse.json(movies);
+    return response(movies);
   }
 
   if (
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
     (title && categoryId) ||
     (category && categoryId)
   ) {
-    return NextResponse.json(
+    return response(
       {
         error:
           "Please provide only one parameter: title, category, or categoryId",
@@ -30,19 +31,19 @@ export async function GET(request: NextRequest) {
     const movies = await movieService.getAll({
       title: title,
     });
-    return NextResponse.json(movies);
+    return response(movies);
   }
 
   if (category) {
     const movies = await movieService.getAll({
       category: category,
     });
-    return NextResponse.json(movies);
+    return response(movies);
   }
   if (categoryId) {
     const movies = await movieService.getAll({
       categoryId: categoryId,
     });
-    return NextResponse.json(movies);
+    return response(movies);
   }
 }

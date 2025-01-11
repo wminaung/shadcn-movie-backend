@@ -1,4 +1,5 @@
 import { movieService } from "@/core";
+import { response } from "@/lib/response";
 import { ParamsProps } from "@/types/base";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -14,5 +15,5 @@ export async function GET(request: NextRequest, { params }: ParamsProps) {
 
   const searchMovie = await movieService.get(id);
 
-  return NextResponse.json(searchMovie, { status: 200 });
+  return response(searchMovie, { status: 200 });
 }
