@@ -1,6 +1,14 @@
 import { movieService } from "@/core";
 import { response } from "@/lib/response";
+import { Category, Movie, PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "../../../lib/db";
+import {
+  findManyMovie,
+  findManyMovieByTitle,
+  findManyMovieCategoryId,
+  findManyMovieCategoryName,
+} from "@/lib/movieQueries";
 
 export async function GET(request: NextRequest) {
   const title = request.nextUrl.searchParams.get("title") || undefined;
@@ -9,7 +17,9 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("categoryId") || undefined;
 
   if (!title && !category && !categoryId) {
-    const movies = await movieService.getAll();
+    // const movies = await movieService.getAll();
+
+    const movies = await findManyMovie();
     return response(movies);
   }
 
@@ -28,22 +38,16 @@ export async function GET(request: NextRequest) {
   }
 
   if (title) {
-    const movies = await movieService.getAll({
-      title: title,
-    });
+    const movies = await findManyMovieByTitle(title);
     return response(movies);
   }
 
   if (category) {
-    const movies = await movieService.getAll({
-      category: category,
-    });
+    const movies = await findManyMovieCategoryName(category);
     return response(movies);
   }
   if (categoryId) {
-    const movies = await movieService.getAll({
-      categoryId: categoryId,
-    });
+    const movies = await findManyMovieCategoryId(categoryId);
     return response(movies);
   }
 }
