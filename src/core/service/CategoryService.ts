@@ -36,7 +36,7 @@ export class CategoryService {
 
   async update(
     id: string,
-    data: Partial<UpdateCategoryPayload>
+    data: UpdateCategoryPayload
   ): Promise<Category | null> {
     const isValidData = this.categoryValidation.updateCategoryData(data);
     if (!id || !isValidData) return null;
