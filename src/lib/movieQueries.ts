@@ -23,7 +23,10 @@ export const findManyMovieByTitle = async (title: string) => {
       },
     },
     where: {
-      title,
+      title: {
+        contains: title,
+        mode: "insensitive",
+      },
     },
   });
   return movies;
