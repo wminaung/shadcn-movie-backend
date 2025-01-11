@@ -4,17 +4,23 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function GET(request: NextRequest) {
   const title = request.nextUrl.searchParams.get("title") || undefined;
   const category = request.nextUrl.searchParams.get("category") || undefined;
+  const categoryId =
+    request.nextUrl.searchParams.get("categoryId") || undefined;
 
-  if (!title || !category) {
-    return NextResponse.json(
-      { error: "Please provide a title and a category" },
-      { status: 400 }
-    );
+  if (!title && !category && !categoryId) {
+    return await movieService.getAll();
   }
 
-  if (title && category) {
+  if (
+    (title && category) ||
+    (title && categoryId) ||
+    (category && categoryId)
+  ) {
     return NextResponse.json(
-      { error: "Please provide either a title or a category, not both" },
+      {
+        error:
+          "Please provide only one parameter: title, category, or categoryId",
+      },
       { status: 400 }
     );
   }
@@ -29,6 +35,12 @@ export async function GET(request: NextRequest) {
   if (category) {
     const movies = await movieService.getAll({
       category: category,
+    });
+    return NextResponse.json(movies);
+  }
+  if (categoryId) {
+    const movies = await movieService.getAll({
+      categoryId: categoryId,
     });
     return NextResponse.json(movies);
   }
