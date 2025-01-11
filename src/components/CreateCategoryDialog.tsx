@@ -14,8 +14,9 @@ import { Label } from "@/components/ui/label";
 import { FiFilePlus } from "react-icons/fi";
 import { Button } from "./ui/button";
 import { FormEvent, useState } from "react";
-import { Category, CreateCategoryPayload } from "@/core/entity/Category";
+import { Category } from "@/core/entity/Category";
 import { useCategoryStore } from "@/store/category/categoryStore";
+import { CreateCategoryPayload } from "@/core/infrastructure/category/ICategoryRepository";
 
 const CreateCategoryDialog = () => {
   const [newCat, setNewCat] = useState<CreateCategoryPayload>({ name: "" });

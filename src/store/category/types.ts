@@ -1,4 +1,5 @@
-import { Category, CreateCategoryPayload } from "@/core/entity/Category";
+import { Category } from "@/core/entity/Category";
+import { CreateCategoryPayload } from "@/core/infrastructure/category/ICategoryRepository";
 
 interface SearchParam {
   movieId?: string;
