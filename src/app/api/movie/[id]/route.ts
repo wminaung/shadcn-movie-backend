@@ -7,10 +7,7 @@ export async function GET(request: NextRequest, { params }: ParamsProps) {
   const id = params["id"];
 
   if (!id) {
-    return NextResponse.json(
-      { error: "Please provide a movie id" },
-      { status: 400 }
-    );
+    return response({ error: "Please provide a movie id" }, { status: 400 });
   }
 
   const searchMovie = await movieService.get(id);
