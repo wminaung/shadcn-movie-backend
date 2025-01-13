@@ -1,4 +1,4 @@
-import { findManyCategory } from "@/lib/categoryQueries";
+import { findManyCategory } from "@/db/query/category";
 import { response } from "@/lib/response";
 import { NextRequest } from "next/server";
 

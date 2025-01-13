@@ -1,5 +1,5 @@
 import { movieService } from "@/core";
-import { findUniqueMovie } from "@/lib/movieQueries";
+import { findUniqueMovie } from "@/db/query/movie";
 import { response } from "@/lib/response";
 import { ParamsProps } from "@/types/base";
 import { NextResponse, type NextRequest } from "next/server";

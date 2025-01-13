@@ -2,13 +2,13 @@ import { movieService } from "@/core";
 import { response } from "@/lib/response";
 import { Category, Movie, PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../../lib/db";
+import { db } from "../../../db";
 import {
   findManyMovie,
   findManyMovieByTitle,
   findManyMovieCategoryId,
   findManyMovieCategoryName,
-} from "@/lib/movieQueries";
+} from "@/db/query/movie";
 
 export async function GET(request: NextRequest) {
   const title = request.nextUrl.searchParams.get("title") || undefined;

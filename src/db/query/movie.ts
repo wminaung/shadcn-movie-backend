@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "..";
 
 export const findManyMovie = async () => {
   const movies = await db.movie.findMany({
@@ -10,6 +10,7 @@ export const findManyMovie = async () => {
       },
     },
   });
+
   return movies;
 };
 
