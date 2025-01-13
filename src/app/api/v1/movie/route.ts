@@ -2,7 +2,7 @@ import { movieService } from "@/core";
 import { response } from "@/lib/response";
 import { Category, Movie, PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../../db";
+import { db } from "../../../../db";
 import {
   findManyMovie,
   findManyMovieByTitle,

@@ -3,7 +3,6 @@ import { ParamsProps } from "@/types/base";
 import { apiAuthCheck } from "@/lib/utils";
 import { movieService } from "@/core";
 import { Movie } from "@/core/entity/Movie";
-import { ApiError } from "@/app/api/ApiError";
 
 // Edit Movie
 

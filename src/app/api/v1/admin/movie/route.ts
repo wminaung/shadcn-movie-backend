@@ -1,7 +1,6 @@
 import { movieService } from "@/core";
 import { CreateMoviePayload } from "@/core/infrastructure/movie/IMovieRepository";
 import { apiAuthCheck } from "@/lib/utils";
-import { ApiError } from "@/app/api/ApiError";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
