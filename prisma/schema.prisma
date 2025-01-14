@@ -16,6 +16,7 @@ model Movie {
   rating       Float
   director     String
   runtime      Int
+  image        String?         @default("/2.avif")
   categories   MovieCategory[]
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt

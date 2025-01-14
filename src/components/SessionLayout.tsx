@@ -2,7 +2,6 @@
 
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -11,12 +10,6 @@ interface Props {
 }
 const SessionLayout = ({ children, session }: Props) => {
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (!session || !session.user || !session.user.email) {
-  //     router.push("/admin/login");
-  //   }
-  // }, [session]);
 
   return <SessionProvider session={session}>{children}</SessionProvider>;
 };
