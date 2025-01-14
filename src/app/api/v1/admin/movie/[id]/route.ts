@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { ParamsProps } from "@/types/base";
-import { apiAuthCheck } from "@/lib/utils";
+import { apiAuthCheck } from "@/lib";
 import { movieService } from "@/core";
 import { Movie } from "@/core/entity/Movie";
 

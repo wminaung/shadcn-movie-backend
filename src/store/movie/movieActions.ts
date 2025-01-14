@@ -7,7 +7,7 @@ import {
   UpdateMoviePayload,
 } from "@/core/infrastructure/movie/IMovieRepository";
 
-import { authCheck } from "@/lib/utils";
+import { authCheck } from "@/lib";
 
 export const getAllMovies = async (option?: GetAllMoviesOption) => {
   return movieService.getAll(option);

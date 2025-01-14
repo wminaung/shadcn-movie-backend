@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,17 +14,27 @@ import { MultiSelect } from "../multi-select";
 import { useCategoryStore } from "@/store/category/categoryStore";
 import Link from "next/link";
 import Notification from "../Notification";
+import { Label } from "../ui/label";
+import ImageLoading from "../ImageLoading";
+import { getFile, isValidFileType } from "@/utils/files";
+import { uploadImage } from "@/db/storage/upload";
 
 const CreateMoviePage: React.FC = () => {
+  const [imageUrl, setImageUrl] = useState(``);
   const {
     register,
     handleSubmit,
     setValue,
     reset,
+    setError,
     formState: { errors },
   } = useForm<CreateMoviePayload>();
   const { addMovie, error, loading } = useMovieStore();
+  const [uploading, setUploading] = useState(false);
   const { categories } = useCategoryStore();
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [requiredCat, setRequiredCat] = useState(false);
+
   const [notification, setNotification] = useState<{
     message: string;
     redirectUrl: string;
@@ -37,24 +47,60 @@ const CreateMoviePage: React.FC = () => {
     }
     const newMovie = await createMovie(data);
     if (!newMovie) {
-      console.log("Movie Create Fail!!!!!!!!");
+      setRequiredCat(true);
+      console.error("Movie Create Fail!!!!!!!!");
     } else {
+      setRequiredCat(false);
       addMovie(newMovie);
       setNotification({
         message: `created successfully: `,
         redirectUrl: `/admin/movie/${newMovie.id}/edit`,
         createdMovie: newMovie,
       });
+      setImageUrl(``);
     }
 
-    reset(); // Clear the input fields after submission
+    reset();
+    setSelectedCategories([]); // Clear the input fields after submission
 
     setTimeout(() => setNotification(null), 5000); // Hide alert after 5 seconds
   };
   const close = () => {
     setNotification(null);
   };
+  const handleCategoryChange = (value: string[]) => {
+    setValue("categoryIds", value);
+    if (value.length) {
+      setRequiredCat(false);
+    } else {
+      setRequiredCat(true);
+    }
+    setSelectedCategories(value); // Update the UI state
+  };
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploading(true);
+    const file = getFile(e);
+    if (!file) {
+      setUploading(false);
+      return;
+    }
+    if (!isValidFileType(file)) {
+      alert("Please upload a JPEG or PNG image.");
+      setUploading(false);
+      return;
+    }
+    const url = await uploadImage(file);
+    if (!url) {
+      setUploading(false);
+      return console.log(`url does not exit`);
+    }
 
+    setImageUrl(url);
+    setValue("image", url);
+    setUploading(false);
+  };
+
+  console.log(errors);
   if (error)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -81,6 +127,33 @@ const CreateMoviePage: React.FC = () => {
         <Notification notification={notification} close={close} />
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <Label htmlFor="image">Image</Label>
+
+          {uploading ? (
+            <ImageLoading />
+          ) : (
+            <Input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/jpeg, image/png"
+              onChange={handleFileChange}
+              className="mb-2 p-2 border rounded w-full"
+            />
+          )}
+
+          {imageUrl && (
+            <div className="mt-2">
+              <p>Image Preview:</p>
+              <img
+                src={imageUrl}
+                alt="Picture preview"
+                className="w-32 h-32 object-cover"
+              />
+            </div>
+          )}
+        </div>
         <div>
           <label
             htmlFor="title"
@@ -112,15 +185,16 @@ const CreateMoviePage: React.FC = () => {
                 value: cat.id,
                 label: cat.name,
               }))}
-              onValueChange={(value) => {
-                setValue("categoryIds", value);
-                // setNewMovie({ ...newMovie, categoryIds: value });
-              }}
+              value={selectedCategories || []} // Controlled value
+              onValueChange={handleCategoryChange}
               placeholder="Select category"
               variant="inverted"
               animation={2}
               maxCount={3}
             />
+            {requiredCat && (
+              <p className="text-red-500 text-sm">{`category is required!`}</p>
+            )}
           </div>
         </div>
         <div>

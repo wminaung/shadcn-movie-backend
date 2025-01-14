@@ -11,14 +11,21 @@ import {
 import { useMovieStore } from "@/store/movie";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { MultiSelect } from "../multi-select";
+import { useCategoryStore } from "@/store/category/categoryStore";
+import MovieNotFound from "../MovieNotFound";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import Image from "next/image";
+import { nextPublicSupabaseBucketName } from "@/constants/constants";
+import { uploadImage } from "@/db/storage/upload";
+import ImageLoading from "../ImageLoading";
+import { getFile, isValidFileType } from "@/utils/files";
 
 interface Props {
   params: { id: string };
 }
-
-import { MultiSelect } from "../multi-select";
-import { useCategoryStore } from "@/store/category/categoryStore";
-import MovieNotFound from "../MovieNotFound";
 
 const EditMovieByIdPage = ({ params }: Props) => {
   const [newMovie, setNewMovie] = useState<CreateMoviePayload | null>(null);
@@ -27,6 +34,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
   const { error, loading, movies, editMovie, removeMovie } = useMovieStore();
   const { categories, filterCategories } = useCategoryStore();
   const router = useRouter();
+  const [uploading, setUploading] = useState(false);
   const [oldMovie, setOldMovie] = useState<CreateMoviePayload | null>(null);
 
   const [invalidId, setInvalidId] = useState(false);
@@ -105,17 +113,54 @@ const EditMovieByIdPage = ({ params }: Props) => {
     setDisabled(false);
   };
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploading(true);
+    const file = getFile(e);
+    if (!file) {
+      setUploading(false);
+      return;
+    }
+    if (!isValidFileType(file)) {
+      alert("Please upload a JPEG or PNG image.");
+      setUploading(false);
+      return;
+    }
+    const url = await uploadImage(file);
+    if (!url) {
+      setUploading(false);
+      return console.log(`url does not exit`);
+    }
+    setNewMovie({ ...newMovie, image: url });
+    setUploading(false);
+  };
+
   return (
     <div className="flex flex-col  sm:flex-row items-center sm:items-start p-0 m-0">
-      <div className=" mx-2 rounded-md">
+      <div className="mx-2 rounded-md">
         <MyImageCard
           asImage
           // movieId={params.id}
           movie={{ ...newMovie, id: params.id }}
           customClassName="rounded-lg w-[180px] sm:w-[300px]"
         />
-      </div>{" "}
+      </div>
       <div className="py-8 flex container sm:contain-none w-full flex-col px-3  md:w-[400px] lg:w-[500px] rounded-md">
+        <div>
+          <Label htmlFor="image">Image</Label>
+
+          {uploading ? (
+            <ImageLoading />
+          ) : (
+            <Input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/jpeg, image/png"
+              onChange={handleFileChange}
+              className="mb-2 p-2 border rounded w-full"
+            />
+          )}
+        </div>
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div>
             <label htmlFor="Title">Title </label>
@@ -164,6 +209,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
 
           <div className="">
             <MultiSelect
+              value={newMovie.categoryIds || []}
               options={categories.map((cat) => ({
                 value: cat.id,
                 label: cat.name,
@@ -192,6 +238,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
               className="mb-2 p-2 border rounded w-full"
             />
           </div>
+
           <div>
             <label htmlFor="Description">Description </label>
             <textarea
@@ -202,12 +249,14 @@ const EditMovieByIdPage = ({ params }: Props) => {
               className="mb-2 p-2 border rounded w-full"
             />
           </div>
+
           <div className="flex justify-between">
             <Button
               type="submit"
               variant={"default"}
               disabled={disabled}
               className="active:scale-95"
+              size={"sm"}
             >
               Save Changes
             </Button>
@@ -215,6 +264,7 @@ const EditMovieByIdPage = ({ params }: Props) => {
               type="button"
               variant={"destructive"}
               className="active:scale-95 "
+              size={"sm"}
               onClick={async () => {
                 if (confirm("Are you sure want to delete this movie")) {
                   const deletedMovie = await deleteMoviesByCategoryIds(

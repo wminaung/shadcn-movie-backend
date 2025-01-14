@@ -6,6 +6,7 @@ export class Movie {
     public description: string,
     public rating: number,
     public director: string,
-    public runtime: number
+    public runtime: number,
+    public image?: string | null
   ) {}
 }

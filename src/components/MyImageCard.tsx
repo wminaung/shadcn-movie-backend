@@ -2,7 +2,7 @@
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 import Link from "next/link";
 import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 import { useMovieStore } from "@/store/movie";
@@ -34,7 +34,7 @@ const MyImageCard = ({ customClassName, movie, asImage }: Props) => {
           components={
             <Image
               fill
-              src={"/2.avif"}
+              src={movie.image || "/2.avif"}
               alt="movie"
               className="object-cover  rounded-lg  transition-all w-full sm:w-[200px] md:w-[300px] lg:w-[400px]"
             />
@@ -55,9 +55,7 @@ const MyImageCard = ({ customClassName, movie, asImage }: Props) => {
           <Link href={`/admin/movie/${movie.id}/edit`}>
             <Image
               fill
-              src={
-                "https://images.plex.tv/photo?size=medium-360&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2F5%2Fgracenote%2F5e382dfb7014b01cb54d34e74edb8039.jpg"
-              }
+              src={movie.image || "/2.avif"}
               alt="movie"
               className="object-cover  rounded hover:border-2 transition-all   
             hover:p-1 hover:border-slate-200 hover:cursor-pointer  overflow-hidden"

@@ -68,16 +68,15 @@ export class MovieService {
     // First update the movie basic data
     const updatedMovie = await this.movieRepository.update(id, dataToUpdate);
 
+    // Get existing categories for cleanup
+    const existingCategories = await this.getCategoriesByMovieId(id);
+    // Remove existing categories
+    for (const category of existingCategories) {
+      await this.movieRepository.removeCategory(id, category.id);
+    }
+
     // If categoryIds are provided, update categories
     if (categoryIds && categoryIds.length > 0) {
-      // Get existing categories for cleanup
-      const existingCategories = await this.getCategoriesByMovieId(id);
-
-      // Remove existing categories
-      for (const category of existingCategories) {
-        await this.movieRepository.removeCategory(id, category.id);
-      }
-
       // Add new categories
       for (const categoryId of categoryIds) {
         await this.movieRepository.addCategory(id, categoryId);

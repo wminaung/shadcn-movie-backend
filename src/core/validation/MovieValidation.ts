@@ -4,6 +4,7 @@ import {
   UpdateMoviePayload,
 } from "../infrastructure/movie/IMovieRepository";
 import { IMovieValidation } from "./IMovieValidation";
+import { Movie } from "../entity/Movie";
 
 export class MovieValidation implements IMovieValidation {
   private titleSchema = z.string().min(1);
@@ -12,6 +13,7 @@ export class MovieValidation implements IMovieValidation {
   private ratingSchema = z.number().min(0).max(10);
   private releaseYearSchema = z.number().min(1900);
   private runtimeSchema = z.number().min(1);
+  private imageSchema = z.string().min(3);
   private categoryIdsSchema = z.array(z.string());
 
   public createMovieData(data: CreateMoviePayload) {
@@ -22,6 +24,7 @@ export class MovieValidation implements IMovieValidation {
       rating: this.ratingSchema,
       release_year: this.releaseYearSchema,
       runtime: this.runtimeSchema,
+      image: this.imageSchema.optional(),
       categoryIds: this.categoryIdsSchema,
     });
 
@@ -42,6 +45,7 @@ export class MovieValidation implements IMovieValidation {
       rating: this.ratingSchema.optional(),
       release_year: this.releaseYearSchema.optional(),
       runtime: this.runtimeSchema.optional(),
+      image: this.imageSchema.optional(),
       categoryIds: this.categoryIdsSchema.optional(),
     });
     const result = movieSchema.safeParse(data);
