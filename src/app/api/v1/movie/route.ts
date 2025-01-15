@@ -1,25 +1,22 @@
-import { movieService } from "@/core";
 import { response } from "@/lib/response";
-import { Category, Movie, PrismaClient } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../../../db";
+import { NextRequest } from "next/server";
 import {
   findManyMovie,
   findManyMovieByTitle,
   findManyMovieCategoryId,
   findManyMovieCategoryName,
 } from "@/db/query/movie";
+import { cacheFetch } from "@/lib/redis";
+import { getMovieQuery } from "@/utils/get-query";
 
 export async function GET(request: NextRequest) {
-  const title = request.nextUrl.searchParams.get("title") || undefined;
-  const category = request.nextUrl.searchParams.get("category") || undefined;
-  const categoryId =
-    request.nextUrl.searchParams.get("categoryId") || undefined;
+  const { title, category, categoryId } = getMovieQuery(request);
 
   if (!title && !category && !categoryId) {
-    // const movies = await movieService.getAll();
-
-    const movies = await findManyMovie();
+    const movies = await cacheFetch(
+      `movie:all`,
+      async () => await findManyMovie()
+    );
     return response(movies);
   }
 
@@ -38,16 +35,26 @@ export async function GET(request: NextRequest) {
   }
 
   if (title) {
-    const movies = await findManyMovieByTitle(title);
+    const movies = await cacheFetch(
+      `movie:search:title:${title}`,
+      async () => await findManyMovieByTitle(title)
+    );
+
     return response(movies);
   }
 
   if (category) {
-    const movies = await findManyMovieCategoryName(category);
+    const movies = await cacheFetch(
+      `movie:search:category:${category}`,
+      async () => await findManyMovieCategoryName(category)
+    );
     return response(movies);
   }
   if (categoryId) {
-    const movies = await findManyMovieCategoryId(categoryId);
+    const movies = await cacheFetch(
+      `movie:search:categoryId:${categoryId}`,
+      async () => await findManyMovieCategoryId(categoryId)
+    );
     return response(movies);
   }
 }

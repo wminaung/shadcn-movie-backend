@@ -33,7 +33,7 @@ const CategoryItem = ({ category }: { category: Category }) => {
           size={"sm"}
           onClick={(e) => {
             e.stopPropagation();
-            console.log("Edit");
+            // console.log("Edit");
           }}
         >
           Edit
@@ -42,7 +42,7 @@ const CategoryItem = ({ category }: { category: Category }) => {
           size={"sm"}
           onClick={(e) => {
             e.stopPropagation();
-            console.log("Delete");
+            // console.log("Delete");
           }}
         >
           Delete
