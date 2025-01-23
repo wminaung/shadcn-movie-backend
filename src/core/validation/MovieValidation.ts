@@ -7,7 +7,7 @@ import { IMovieValidation } from "./IMovieValidation";
 
 export class MovieValidation implements IMovieValidation {
   private titleSchema = z.string().min(1);
-  private descriptionSchema = z.string().min(5);
+  private descriptionSchema = z.string().min(3);
   private directorSchema = z.string().min(1);
   private ratingSchema = z.number().min(0).max(10);
   private releaseYearSchema = z.number().min(1900);

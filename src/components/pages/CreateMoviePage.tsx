@@ -26,14 +26,33 @@ const CreateMoviePage: React.FC = () => {
     handleSubmit,
     setValue,
     reset,
-    setError,
     formState: { errors },
-  } = useForm<CreateMoviePayload>();
+  } = useForm<CreateMoviePayload>({
+    defaultValues: {
+      categoryIds: [],
+      image: "",
+      description: `desc`,
+      title: `title`,
+      director: `director`,
+      release_year: 1999,
+      rating: 4,
+      runtime: 100,
+    },
+  });
+  const [disabled, setDisabled] = useState<boolean>(true);
   const { addMovie, error, loading } = useMovieStore();
   const [uploading, setUploading] = useState(false);
   const { categories } = useCategoryStore();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [requiredCat, setRequiredCat] = useState(false);
+
+  useEffect(() => {
+    if (selectedCategories.length === 0 || imageUrl.trim() === ``) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [imageUrl, selectedCategories]);
 
   const [notification, setNotification] = useState<{
     message: string;
@@ -42,10 +61,14 @@ const CreateMoviePage: React.FC = () => {
   } | null>(null);
 
   const onSubmit: SubmitHandler<CreateMoviePayload> = async (data) => {
+    setDisabled(true);
+
     if (!data) {
+      setDisabled(false);
       return;
     }
     const newMovie = await createMovie(data);
+
     if (!newMovie) {
       setRequiredCat(true);
       console.error("Movie Create Fail!!!!!!!!");
@@ -62,12 +85,13 @@ const CreateMoviePage: React.FC = () => {
 
     reset();
     setSelectedCategories([]); // Clear the input fields after submission
-
+    setDisabled(false);
     setTimeout(() => setNotification(null), 5000); // Hide alert after 5 seconds
   };
   const close = () => {
     setNotification(null);
   };
+
   const handleCategoryChange = (value: string[]) => {
     setValue("categoryIds", value);
     if (value.length) {
@@ -77,6 +101,7 @@ const CreateMoviePage: React.FC = () => {
     }
     setSelectedCategories(value); // Update the UI state
   };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setUploading(true);
     const file = getFile(e);
@@ -100,7 +125,6 @@ const CreateMoviePage: React.FC = () => {
     setUploading(false);
   };
 
-  console.log(errors);
   if (error)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -302,7 +326,7 @@ const CreateMoviePage: React.FC = () => {
             <p className="text-red-500 text-sm">{errors.runtime.message}</p>
           )}
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" disabled={disabled} className="w-full">
           Create Movie
         </Button>
       </form>
