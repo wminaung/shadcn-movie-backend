@@ -4,7 +4,6 @@ import {
   UpdateMoviePayload,
 } from "../infrastructure/movie/IMovieRepository";
 import { IMovieValidation } from "./IMovieValidation";
-import { Movie } from "../entity/Movie";
 
 export class MovieValidation implements IMovieValidation {
   private titleSchema = z.string().min(1);

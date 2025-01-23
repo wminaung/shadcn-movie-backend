@@ -2,65 +2,44 @@
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { cn } from "@/lib";
 import Link from "next/link";
 import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 import { useMovieStore } from "@/store/movie";
 import { Movie } from "@/core/entity/Movie";
 import { Category } from "@/core/entity/Category";
+import { cn } from "@/lib/utils";
 
 interface Props {
   customClassName?: string;
   movie?: Movie;
-  asImage?: boolean;
 }
 
 //https://images.plex.tv/photo?size=medium-360&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fc%2Fgracenote%2Fc307cf09b20216353316e6f18bf2756d.jpg
 
-const MyImageCard = ({ customClassName, movie, asImage }: Props) => {
-  // const { movies } = useMovieStore();
-
+const ImageWidget = ({ customClassName, movie }: Props) => {
   if (!movie) return <div>There is no movie</div>;
-
-  // ! in params
-  if (asImage) {
-    return (
-      <Card
-        className={cn("border-0 shadow-none dark:bg-gray-900", customClassName)}
-      >
-        <MyAspectRatio
-          ratio={2 / 3}
-          width={10}
-          components={
-            <Image
-              fill
-              src={movie.image || "/2.avif"}
-              alt="movie"
-              className="object-cover  rounded-lg  transition-all w-full sm:w-[200px] md:w-[300px] lg:w-[400px]"
-            />
-          }
-        />
-      </Card>
-    );
-  }
 
   return (
     <Card
-      className={cn("border-0 shadow-none dark:bg-gray-900", customClassName)}
+      className={cn("border-0 shadow-none dark:bg-gray-900 ", customClassName)}
     >
       <MyAspectRatio
         ratio={2 / 3}
         width={10}
         components={
-          <Link href={`/admin/movie/${movie.id}/edit`}>
-            <Image
-              fill
-              src={movie.image || "/2.avif"}
-              alt="movie"
-              className="object-cover  rounded hover:border-2 transition-all   
+          <div className="relative w-full h-full">
+            <Link href={`/admin/movie/${movie.id}/edit`}>
+              <Image
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                src={movie.image || "/2.avif"}
+                alt="movie"
+                priority
+                className="object-cover  rounded hover:border-2 transition-all   
             hover:p-1 hover:border-slate-200 hover:cursor-pointer  overflow-hidden"
-            />
-          </Link>
+              />
+            </Link>
+          </div>
         }
       />
 
@@ -74,4 +53,4 @@ const MyImageCard = ({ customClassName, movie, asImage }: Props) => {
   );
 };
 
-export default MyImageCard;
+export default ImageWidget;

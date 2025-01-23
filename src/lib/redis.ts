@@ -3,11 +3,16 @@ import { Redis } from "@upstash/redis";
 // Initialize Redis
 export const redis = Redis.fromEnv();
 
+interface CacheFetchOption {
+  role: `admin` | `user`;
+  expire: number;
+}
+
 // Generic cache-fetch function
 export const cacheFetch = async <T>(
   key: string,
   fetchFunction: () => Promise<T | null>,
-  role: `admin` | `user` = `user`
+  { role, expire }: CacheFetchOption = { role: `user`, expire: 3600 }
 ): Promise<T | null> => {
   // Try to get the value from Redis
   const cachedValue = await redis.get<T>(key);
@@ -26,7 +31,7 @@ export const cacheFetch = async <T>(
 
   if (freshValue !== null) {
     await redis.set(key, JSON.stringify(freshValue), {
-      ex: 3600, // Expire in 1 hour
+      ex: expire, // Expire in 1 hour
     });
   }
   // Store the fresh value in Redis with an expiration time (e.g., 1 hour)

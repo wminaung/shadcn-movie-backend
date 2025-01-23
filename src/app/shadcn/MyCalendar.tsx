@@ -6,7 +6,6 @@ import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { cn, getYesterdayDate } from "@/lib";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -24,6 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn, getYesterdayDate } from "@/lib/utils";
 
 const FormSchema = z.object({
   dob: z.date({

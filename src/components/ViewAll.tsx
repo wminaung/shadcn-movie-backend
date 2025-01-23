@@ -2,12 +2,12 @@
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { cn } from "@/lib";
 import Link from "next/link";
 import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 import { useMovieStore } from "@/store/movie";
 import { Movie } from "@/core/entity/Movie";
 import { Category } from "@/core/entity/Category";
+import { cn } from "@/lib/utils";
 
 interface Props {
   customClassName?: string;

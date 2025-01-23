@@ -16,7 +16,7 @@ import Link from "next/link";
 import Notification from "../Notification";
 import { Label } from "../ui/label";
 import ImageLoading from "../ImageLoading";
-import { getFile, isValidFileType } from "@/utils/files";
+import { getFile, isValidFileType } from "@/lib/utils/files";
 import { uploadImage } from "@/db/storage/upload";
 
 const CreateMoviePage: React.FC = () => {

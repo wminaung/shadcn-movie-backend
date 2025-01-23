@@ -20,6 +20,8 @@ model Movie {
   categories   MovieCategory[]
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
+
+  @@map("movies")
 }
 
 model Category {
@@ -28,6 +30,8 @@ model Category {
   movies    MovieCategory[]
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
+
+  @@map("categories")
 }
 
 model MovieCategory {
@@ -38,4 +42,5 @@ model MovieCategory {
   createdAt  DateTime @default(now())
 
   @@id([movieId, categoryId])
+  @@map("movies_categories")
 }

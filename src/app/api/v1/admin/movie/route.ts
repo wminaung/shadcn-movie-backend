@@ -4,7 +4,7 @@ import { apiAuthCheck } from "@/lib";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const token = apiAuthCheck(request);
+  const token = await apiAuthCheck(request);
   if (!token) {
     return NextResponse.json(
       { error: "unauthorized, Please get token first" },

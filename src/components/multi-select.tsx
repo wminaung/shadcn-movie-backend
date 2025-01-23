@@ -9,7 +9,6 @@ import {
   XIcon,
   WandSparkles,
 } from "lucide-react";
-import { cn } from "@/lib";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +26,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
 /**
  * Variants for the multi-select component to handle different styles.

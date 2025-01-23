@@ -1,7 +1,7 @@
 "use client";
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
-import MyImageCard from "@/components/MyImageCard";
+import ShowImage from "@/components/ShowImage";
 import { Button } from "@/components/ui/button";
 import { CreateMoviePayload } from "@/core/infrastructure/movie/IMovieRepository";
 import {
@@ -21,7 +21,7 @@ import Image from "next/image";
 import { nextPublicSupabaseBucketName } from "@/constants/constants";
 import { uploadImage } from "@/db/storage/upload";
 import ImageLoading from "../ImageLoading";
-import { getFile, isValidFileType } from "@/utils/files";
+import { getFile, isValidFileType } from "@/lib/utils/files";
 
 interface Props {
   params: { id: string };
@@ -137,10 +137,8 @@ const EditMovieByIdPage = ({ params }: Props) => {
   return (
     <div className="flex flex-col  sm:flex-row items-center sm:items-start p-0 m-0">
       <div className="mx-2 rounded-md">
-        <MyImageCard
-          asImage
-          // movieId={params.id}
-          movie={{ ...newMovie, id: params.id }}
+        <ShowImage
+          image={newMovie.image}
           customClassName="rounded-lg w-[180px] sm:w-[300px]"
         />
       </div>

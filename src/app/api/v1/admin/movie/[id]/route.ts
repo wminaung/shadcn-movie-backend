@@ -7,7 +7,7 @@ import { Movie } from "@/core/entity/Movie";
 // Edit Movie
 
 export async function PUT(request: NextRequest, { params }: ParamsProps) {
-  const token = apiAuthCheck(request);
+  const token = await apiAuthCheck(request);
   if (!token) {
     return NextResponse.json(
       { error: "unauthorized, Please get token first" },
@@ -25,7 +25,7 @@ export async function PUT(request: NextRequest, { params }: ParamsProps) {
 }
 
 export async function DELETE(request: NextRequest, { params }: ParamsProps) {
-  const token = apiAuthCheck(request);
+  const token = await apiAuthCheck(request);
   if (!token) {
     return NextResponse.json(
       { error: "unauthorized, Please get token first" },

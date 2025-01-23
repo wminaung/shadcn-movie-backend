@@ -7,7 +7,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import MyImageCard from "./MyImageCard";
 import { Category } from "@/core/entity/Category";
 import { useEffect, useState } from "react";
 import { Movie } from "@/core/entity/Movie";
@@ -18,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useMovieStore } from "@/store/movie";
 import Loading from "./Loading";
 import { Separator } from "./ui/separator";
+import ImageWidget from "./ImageWidget";
 //sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5
 
 interface Props {
@@ -66,7 +66,7 @@ const MyMoviesCarousel = ({ category }: Props) => {
                 key={movie.id}
                 className={`basis-2/2 sm:basis-1/3 md:basis-1/4 lg:basis:1/5 xl:basis-1/5`}
               >
-                <MyImageCard
+                <ImageWidget
                   movie={movie}
                   customClassName=" w-[100px] sm:w-[160px] md:w-[170px] lg:w-[220px]"
                 />
