@@ -23,7 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn, getYesterdayDate } from "@/lib/utils";
+import { cn, getYesterdayDate } from "@/utils";
 
 const FormSchema = z.object({
   dob: z.date({

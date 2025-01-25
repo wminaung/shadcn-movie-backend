@@ -3,7 +3,7 @@ import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 import { Movie } from "@/core/entity/Movie";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 interface Props {
   customClassName?: string;

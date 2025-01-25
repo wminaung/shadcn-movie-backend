@@ -24,13 +24,14 @@ export class MovieValidation implements IMovieValidation {
       release_year: this.releaseYearSchema,
       runtime: this.runtimeSchema,
       image: this.imageSchema.optional(),
-      categoryIds: this.categoryIdsSchema,
+      categoryIds: this.categoryIdsSchema.optional(),
     });
 
     const result = movieSchema.safeParse(data);
 
     if (result.error) {
-      console.error(result.error);
+      const error = result.error;
+      console.warn(error.name, error.message);
       return false;
     }
     return result.success;

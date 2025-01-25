@@ -7,7 +7,7 @@ import {
   findManyMovieCategoryName,
 } from "@/db/query/movie";
 import { cacheFetch } from "@/lib/redis";
-import { getMovieQuery } from "@/lib/utils/get-query";
+import { getMovieQuery } from "@/utils/get-query";
 
 export async function GET(request: NextRequest) {
   const { title, category, categoryId } = getMovieQuery(request);

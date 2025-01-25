@@ -72,7 +72,7 @@ async function main() {
     }),
   ]);
 }
-
+prisma.$connect();
 main()
   .catch((e) => {
     console.error(e);

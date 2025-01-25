@@ -7,7 +7,7 @@ import MyAspectRatio from "@/app/shadcn/MyAspectRatio";
 import { useMovieStore } from "@/store/movie";
 import { Movie } from "@/core/entity/Movie";
 import { Category } from "@/core/entity/Category";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 interface Props {
   customClassName?: string;

@@ -21,7 +21,7 @@ import Image from "next/image";
 import { nextPublicSupabaseBucketName } from "@/constants/constants";
 import { uploadImage } from "@/db/storage/upload";
 import ImageLoading from "../ImageLoading";
-import { getFile, isValidFileType } from "@/lib/utils/files";
+import { getFile, isValidFileType } from "@/utils/files";
 
 interface Props {
   params: { id: string };
